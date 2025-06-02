@@ -1,0 +1,279 @@
+/* @import './theme-utils.css'; */
+
+@theme {
+  --font-sans:
+    'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    'Noto Color Emoji';
+
+  --color-primary-50: #f6f5fa;
+  --color-primary-100: #eae7f3;
+  --color-primary-200: #d6cfe8;
+  --color-primary-300: #bbb0d9;
+  --color-primary-400: #9a8ac6;
+  --color-primary-500: #6750a4;
+  --color-primary-600: #5c4893;
+  --color-primary-700: #514082;
+  --color-primary-800: #45366e;
+  --color-primary-900: #2b2145;
+  --color-primary-950: #1c162d;
+
+  --color-primary-text-50: #4d5462;
+  --color-primary-text-100: #4d5462;
+  --color-primary-text-200: #4d5462;
+  --color-primary-text-300: #4d5462;
+  --color-primary-text-400: #4d5462;
+  --color-primary-text-500: #ecf0f3;
+  --color-primary-text-600: #ecf0f3;
+  --color-primary-text-700: #ecf0f3;
+  --color-primary-text-800: #ecf0f3;
+  --color-primary-text-900: #ecf0f3;
+  --color-primary-text-950: #ecf0f3;
+
+  --color-primary-hover-50: #f6f4fa;
+  --color-primary-hover-100: #ede9f6;
+  --color-primary-hover-200: #dbd4ed;
+  --color-primary-hover-300: #c2b7e1;
+  --color-primary-hover-400: #a797d3;
+  --color-primary-hover-500: #7f68c0;
+  --color-primary-hover-600: #765dbb;
+  --color-primary-hover-700: #654ab0;
+  --color-primary-hover-800: #523c90;
+  --color-primary-hover-900: #3e2d6c;
+  --color-primary-hover-950: #2b204c;
+
+  --color-accent-50: #f1f6fd;
+  --color-accent-100: #e4edfb;
+  --color-accent-200: #c9daf8;
+  --color-accent-300: #a5c2f3;
+  --color-accent-400: #78a3ed;
+  --color-accent-500: #3f7de6;
+  --color-accent-600: #2b6fe3;
+  --color-accent-700: #1c5fd4;
+  --color-accent-800: #174fb0;
+  --color-accent-900: #0f3575;
+  --color-accent-950: #0b2451;
+
+  --color-accent-text-50: #1e4e8a;
+  --color-accent-text-100: #1e4e8a;
+  --color-accent-text-200: #1e4e8a;
+  --color-accent-text-300: #1e4e8a;
+  --color-accent-text-400: #dbebfe;
+  --color-accent-text-500: #ecf0f3;
+  --color-accent-text-600: #dbebfe;
+  --color-accent-text-700: #dbebfe;
+  --color-accent-text-800: #dbebfe;
+  --color-accent-text-900: #dbebfe;
+  --color-accent-text-950: #dbebfe;
+
+  --color-accent-hover-50: #f1f6fe;
+  --color-accent-hover-100: #e7f0fd;
+  --color-accent-hover-200: #cbddfb;
+  --color-accent-hover-300: #afcbf9;
+  --color-accent-hover-400: #89b3f6;
+  --color-accent-hover-500: #5b95f2;
+  --color-accent-hover-600: #4285f0;
+  --color-accent-hover-700: #216fed;
+  --color-accent-hover-800: #105ad0;
+  --color-accent-hover-900: #0c4197;
+  --color-accent-hover-950: #082d68;
+
+  --color-background-50: #fafbff;
+  --color-background-100: #fafbff;
+  --color-background-200: #fafbff;
+  --color-background-300: #fafbff;
+  --color-background-400: #fafbff;
+  --color-background-500: #f9faff;
+  --color-background-600: #dbe1ff;
+  --color-background-700: #b8c3ff;
+  --color-background-800: #8fa2ff;
+  --color-background-900: #4d6aff;
+  --color-background-950: #0f37ff;
+
+  --color-background-text-50: #323748;
+  --color-background-text-100: #323748;
+  --color-background-text-200: #323748;
+  --color-background-text-300: #323748;
+  --color-background-text-400: #eceef2;
+  --color-background-text-500: #eceef2;
+  --color-background-text-600: #eceef2;
+  --color-background-text-700: #eceef2;
+  --color-background-text-800: #eceef2;
+  --color-background-text-900: #eceef2;
+  --color-background-text-950: #eceef2;
+
+  --color-surface-50: #fcfcfc;
+  --color-surface-100: #fcfcfc;
+  --color-surface-200: #fcfcfc;
+  --color-surface-300: #fcfcfc;
+  --color-surface-400: #fcfcfc;
+  --color-surface-500: #ffffff;
+  --color-surface-600: #e8e8e8;
+  --color-surface-700: #cccccc;
+  --color-surface-800: #ababab;
+  --color-surface-900: #7d7d7d;
+  --color-surface-950: #595959;
+
+  --color-surface-border-50: #fcfcfd;
+  --color-surface-border-100: #f8fafc;
+  --color-surface-border-200: #f5f7fa;
+  --color-surface-border-300: #eef2f6;
+  --color-surface-border-400: #e7ecf3;
+  --color-surface-border-500: #e2e8f0;
+  --color-surface-border-600: #c6d2e1;
+  --color-surface-border-700: #a8bad2;
+  --color-surface-border-800: #839dbf;
+  --color-surface-border-900: #50709b;
+  --color-surface-border-950: #39516f;
+
+  --color-muted-50: #f3f4f7;
+  --color-muted-100: #e7eaee;
+  --color-muted-200: #ccd2db;
+  --color-muted-300: #acb4c4;
+  --color-muted-400: #828fa6;
+  --color-muted-500: #4a5568;
+  --color-muted-600: #424b5c;
+  --color-muted-700: #373f4e;
+  --color-muted-800: #313845;
+  --color-muted-900: #222730;
+  --color-muted-950: #171b21;
+
+  --color-muted-text-50: #373b42;
+  --color-muted-text-100: #373b42;
+  --color-muted-text-200: #373b42;
+  --color-muted-text-300: #373b42;
+  --color-muted-text-400: #e3e6ea;
+  --color-muted-text-500: #e3e6ea;
+  --color-muted-text-600: #e3e6ea;
+  --color-muted-text-700: #e3e6ea;
+  --color-muted-text-800: #e3e6ea;
+  --color-muted-text-900: #e3e6ea;
+  --color-muted-text-950: #e3e6ea;
+
+  --color-warning-50: #fff6f0;
+  --color-warning-100: #feeadc;
+  --color-warning-200: #fdd6b9;
+  --color-warning-300: #fcbe92;
+  --color-warning-400: #fb9e5b;
+  --color-warning-500: #f97316;
+  --color-warning-600: #e56306;
+  --color-warning-700: #c75605;
+  --color-warning-800: #a94904;
+  --color-warning-900: #723103;
+  --color-warning-950: #502202;
+
+  --color-warning-text-50: #785f0f;
+  --color-warning-text-100: #785f0f;
+  --color-warning-text-200: #785f0f;
+  --color-warning-text-300: #785f0f;
+  --color-warning-text-400: #785f0f;
+  --color-warning-text-500: #785f0f;
+  --color-warning-text-600: #785f0f;
+  --color-warning-text-700: #fef1c7;
+  --color-warning-text-800: #fef1c7;
+  --color-warning-text-900: #fef1c7;
+  --color-warning-text-950: #fef1c7;
+
+  --color-danger-50: #fef6f6;
+  --color-danger-100: #fde8e8;
+  --color-danger-200: #fbd0d0;
+  --color-danger-300: #f8afaf;
+  --color-danger-400: #f58585;
+  --color-danger-500: #ef4444;
+  --color-danger-600: #eb1414;
+  --color-danger-700: #cf1212;
+  --color-danger-800: #a90f0f;
+  --color-danger-900: #840b0b;
+  --color-danger-950: #550707;
+
+  --color-danger-text-50: #7f1d1d;
+  --color-danger-text-100: #7f1d1d;
+  --color-danger-text-200: #7f1d1d;
+  --color-danger-text-300: #7f1d1d;
+  --color-danger-text-400: #fee2e2;
+  --color-danger-text-500: #fee2e2;
+  --color-danger-text-600: #fee2e2;
+  --color-danger-text-700: #fee2e2;
+  --color-danger-text-800: #fee2e2;
+  --color-danger-text-900: #fee2e2;
+  --color-danger-text-950: #fee2e2;
+
+  --color-text-primary-50: #f2f2f8;
+  --color-text-primary-100: #e5e5f0;
+  --color-text-primary-200: #c8c9e0;
+  --color-text-primary-300: #a7a9cd;
+  --color-text-primary-400: #7679b2;
+  --color-text-primary-500: #1a1b2e;
+  --color-text-primary-600: #18192a;
+  --color-text-primary-700: #18192a;
+  --color-text-primary-800: #000000;
+  --color-text-primary-900: #000000;
+  --color-text-primary-950: #000000;
+
+  --color-text-muted-50: #f7f7f8;
+  --color-text-muted-100: #e9eaec;
+  --color-text-muted-200: #d3d5da;
+  --color-text-muted-300: #b7bbc3;
+  --color-text-muted-400: #959ba7;
+  --color-text-muted-500: #6b7280;
+  --color-text-muted-600: #5f6572;
+  --color-text-muted-700: #545964;
+  --color-text-muted-800: #464a53;
+  --color-text-muted-900: #2e3138;
+  --color-text-muted-950: #25282c;
+
+  /* --shadow-2xs: 0 1px rgb(255 255 255 / 0.05);
+  --shadow-xs: 0 1px 2px 0 rgb(255 255 255 / 0.05);
+  --shadow-sm: 0 1px 3px 0 rgb(255 255 255 / 0.1), 0 1px 2px -1px rgb(255 255 255 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(255 255 255 / 0.1), 0 2px 4px -2px rgb(255 255 255 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(255 255 255 / 0.1), 0 4px 6px -4px rgb(255 255 255 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(255 255 255 / 0.1), 0 8px 10px -6px rgb(255 255 255 / 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgb(255 255 255 / 0.25);
+  --inset-shadow-2xs: inset 0 1px rgb(255 255 255 / 0.05);
+  --inset-shadow-xs: inset 0 1px 1px rgb(255 255 255 / 0.05);
+  --inset-shadow-sm: inset 0 2px 4px rgb(255 255 255 / 0.05);
+  --drop-shadow-xs: 0 1px 1px rgb(255 255 255 / 0.05);
+  --drop-shadow-sm: 0 1px 2px rgb(255 255 255 / 0.15);
+  --drop-shadow-md: 0 3px 3px rgb(255 255 255 / 0.12);
+  --drop-shadow-lg: 0 4px 4px rgb(255 255 255 / 0.15);
+  --drop-shadow-xl: 0 9px 7px rgb(255 255 255 / 0.1);
+  --drop-shadow-2xl: 0 25px 25px rgb(255 255 255 / 0.15); */
+
+  --animate-fade-in: fade-in 200ms linear;
+
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+}
+
+@source inline("{hover:,active:,}bg-primary-{50,{100..900..100},950}");
+@source inline("{hover:,active:,}bg-primary-{50,{100..900..100},950}{/,/5,/10,/20,/25,/30,/40,/50,/60,/70,/75,/80,/90,/95}");
+@source inline("{hover:,active:,}text-primary-text-{50,{100..900..100},950}");
+
+@source inline("{hover:,active:,}bg-accent-{50,{100..900..100},950}");
+@source inline("{hover:,active:,}bg-accent-{50,{100..900..100},950}{/,/5,/10,/20,/25,/30,/40,/50,/60,/70,/75,/80,/90,/95}");
+@source inline("{hover:,active:,}text-accent-text-{50,{100..900..100},950}");
+
+@source inline("{hover:,active:,}bg-surface-{50,{100..900..100},950}");
+@source inline("{hover:,active:,}bg-surface-{50,{100..900..100},950}{/,/5,/10,/20,/25,/30,/40,/50,/60,/70,/75,/80,/90,/95}");
+@source inline("{hover:,active:,}text-surface-text-{50,{100..900..100},950}");
+
+@source inline("{hover:,active:,}bg-muted-{50,{100..900..100},950}");
+@source inline("{hover:,active:,}bg-muted-{50,{100..900..100},950}{/,/5,/10,/20,/25,/30,/40,/50,/60,/70,/75,/80,/90,/95}");
+@source inline("{hover:,active:,}text-muted-text-{50,{100..900..100},950}");
+
+@source inline("{hover:,active:,}bg-warning-{50,{100..900..100},950}");
+@source inline("{hover:,active:,}bg-warning-{50,{100..900..100},950}{/,/5,/10,/20,/25,/30,/40,/50,/60,/70,/75,/80,/90,/95}");
+@source inline("{hover:,active:,}text-warning-text-{50,{100..900..100},950}");
+
+@source inline("{hover:,active:,}bg-danger-{50,{100..900..100},950}");
+@source inline("{hover:,active:,}bg-danger-{50,{100..900..100},950}{/,/5,/10,/20,/25,/30,/40,/50,/60,/70,/75,/80,/90,/95}");
+@source inline("{hover:,active:,}text-danger-text-{50,{100..900..100},950}");
+
+@source inline("{hover:,active:,}bg-background-{50,{100..900..100},950}");
+@source inline("{hover:,active:,}bg-background-{50,{100..900..100},950}{/,/5,/10,/20,/25,/30,/40,/50,/60,/70,/75,/80,/90,/95}");
+@source inline("{hover:,active:,}text-background-text-{50,{100..900..100},950}");

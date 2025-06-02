@@ -1,0 +1,40 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+    provider = "prisma-client-ts"
+    output   = "../src/generated/prisma"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = "postgresql://luunar_admin:luunar_password@localhost:5432/luunar"
+}
+
+model User {
+    id         String   @id @default(cuid())
+    created_at DateTime @default(now())
+
+    email      String @unique
+    password   String // hashed
+    first_name String
+    last_name  String
+
+    @@map("users")
+}
+
+model Client {
+    id         String   @id @default(cuid())
+    created_at DateTime @default(now())
+
+    name            String
+    email           String?
+    phone           String?
+    notes           String?
+    organization_id String // Will end up being a relation to the Organizations table
+
+    @@map("clients")
+}

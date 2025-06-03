@@ -1,32 +1,33 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-interface InputTextProps {
+interface InputNumberProps {
   id?: string;
-  value?: string;
-  onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  defaultValue?: number;
+  onChange?: (value: number) => void;
   type?: React.HTMLInputTypeAttribute;
   required?: boolean;
 }
-export default function InputText({
+export default function InputNumber({
   id,
-  value: defaultValue = '',
-  type = 'text',
+  defaultValue = 0,
+  type = 'number',
   onChange,
   required = false,
-}: InputTextProps) {
-  const [value, setValue] = useState<string>(defaultValue);
+}: InputNumberProps) {
+  const [value, setValue] = useState<number>(defaultValue);
 
   return (
     <input
       id={id}
       type={type}
       className="w-full rounded-sm border border-surface-border-500 bg-surface-500 px-2 py-1 text-text-primary-500 focus-within:border-primary-400 focus-within:outline-none"
-      value={value}
+      value={value.toString()}
       onChange={(evt) => {
-        setValue(evt.target.value);
+        const value = parseInt(evt.target.value);
+        setValue(value);
 
         if (onChange) {
-          onChange(evt);
+          onChange(value);
         }
       }}
       required={required}

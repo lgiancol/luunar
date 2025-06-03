@@ -1,5 +1,7 @@
 import { PlusIcon } from 'lucide-react';
-import { Link } from 'react-router';
+import { useEffect, useState } from 'react';
+import AddPaymentForm from '~/components/payments/add-payment-form';
+import PageDetailsDrawer from '~/components/shared/page-details-drawer';
 import { Button } from '~/components/ui/button';
 import { usePaginatedPayments } from '~/hooks/payments/userPaginatedPayments';
 import { useRedirectIfUnauthenticated } from '~/hooks/useRedirectIfUnauthenticated';
@@ -7,6 +9,11 @@ import { useRedirectIfUnauthenticated } from '~/hooks/useRedirectIfUnauthenticat
 export default function PaymentsPage() {
   useRedirectIfUnauthenticated();
   const { paymentsPage, loading } = usePaginatedPayments({ page: 1, pageSize: 5 });
+  const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    console.log(drawerOpen);
+  }, [drawerOpen]);
 
   if (loading) {
     return (
@@ -25,17 +32,27 @@ export default function PaymentsPage() {
           </div>
 
           <div>
-            <Link to="/payments/add">
-              <Button variant="outline">
-                <PlusIcon />
-                Add Payment
-              </Button>
-            </Link>
+            <Button variant="white" onClick={() => setDrawerOpen(true)}>
+              <PlusIcon />
+              Add Payment
+            </Button>
           </div>
         </div>
-        {/* <ClientList page={clientsPage} /> */}
         <div>{paymentsPage?.meta.total}</div>
       </div>
+
+      <PageDetailsDrawer open={drawerOpen} title="Add Payment" onOpenChange={setDrawerOpen}>
+        <PageDetailsDrawer.Content>
+          <AddPaymentForm />
+        </PageDetailsDrawer.Content>
+        <PageDetailsDrawer.Footer>
+          <div className="flex justify-end">
+            <Button form="add-payment-form" type="submit">
+              Save
+            </Button>
+          </div>
+        </PageDetailsDrawer.Footer>
+      </PageDetailsDrawer>
     </div>
   );
 }

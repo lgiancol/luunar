@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import Button from './button';
+import { Button } from './button';
 
 interface ExpansionPanelProps {
   children: React.ReactNode;
@@ -29,7 +29,7 @@ export default function ExpansionPanel({ children, expanded: expandedProp = fals
         <div className="flex items-center justify-between">
           <div>{header}</div>
           <div>
-            <Button colour="surface" variant="icon" onClick={() => setExpanded((e) => !e)}>
+            <Button color="surface" variant="default" onClick={() => setExpanded((e) => !e)}>
               V
             </Button>
           </div>

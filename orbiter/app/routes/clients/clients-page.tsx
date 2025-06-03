@@ -27,7 +27,7 @@ export default function ClientsPage() {
 
           <div>
             <Link to="/clients/add">
-              <Button variant="outline">
+              <Button variant="outline" className="bg-white">
                 <PlusIcon />
                 Add Client
               </Button>

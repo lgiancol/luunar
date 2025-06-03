@@ -1,0 +1,127 @@
+import clsx from 'clsx';
+import { ChevronDown } from 'lucide-react';
+import React, { useCallback, useMemo, useState } from 'react';
+import { Button } from '../ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+
+interface DataSelectorProps<T> {
+  id?: string;
+  emptyText?: string;
+  dataId?: string;
+
+  selectedEntry?: T;
+  recentList?: T[];
+  filteredList?: T[];
+  loadNextPage?: () => void;
+  onSelect?: (item?: T) => void;
+
+  children: React.ReactNode;
+}
+export default function DataSelector<T>({
+  id,
+  dataId,
+  emptyText = 'Find or add...',
+  selectedEntry,
+  recentList,
+  filteredList,
+  loadNextPage,
+  onSelect,
+  children,
+}: DataSelectorProps<T>) {
+  const itemComponent = React.Children.toArray(children).find((child: any) => child.type === DataSelector.Item);
+  const searchInputComponent = React.Children.toArray(children).find(
+    (child: any) => child.type === DataSelector.SearchInput
+  );
+  let selectedItemComponent = React.Children.toArray(children).find(
+    (child: any) => child.type === DataSelector.SelectedItem
+  );
+
+  if (!selectedItemComponent) {
+    selectedItemComponent = itemComponent;
+  }
+
+  const [showList, setShowList] = useState<boolean>(false);
+  const entries = useMemo(() => {
+    const clients = filteredList ? filteredList : recentList;
+    return {
+      data: clients,
+      label: !filteredList ? 'Recent' : null,
+    };
+  }, [recentList, filteredList]);
+
+  const handleItemClick = useCallback(
+    (item?: T) => {
+      if (onSelect) {
+        onSelect(item);
+      }
+
+      setShowList(false);
+    },
+    [selectedEntry, onSelect]
+  );
+
+  return (
+    <div id={id} className="relative flex flex-col gap-1">
+      <Popover open={showList} onOpenChange={setShowList} modal>
+        <PopoverTrigger asChild>
+          <Button variant="ghost" className="h-auto w-full justify-between border border-surface-border-500">
+            {selectedEntry ? (
+              selectedItemComponent ? (
+                React.cloneElement(selectedItemComponent as React.ReactElement<any>, {
+                  item: selectedEntry,
+                })
+              ) : null
+            ) : (
+              <div>{emptyText}</div>
+            )}
+            <ChevronDown className={clsx({ '-rotate-180': showList })} />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent
+          className={clsx('PopoverContent', { hidden: !showList })}
+          container={document.getElementById('clientSelector')}
+        >
+          <div className="w-full">
+            <div className="rounded-md">
+              <div className="flex flex-col gap-2">
+                {searchInputComponent ? <div>{searchInputComponent}</div> : null}
+
+                <div>
+                  <div className="flex flex-col gap-1">
+                    {entries.label && <div className="text-sm font-bold">{entries.label}</div>}
+                    {entries.data?.map((entry: any) =>
+                      itemComponent ? (
+                        <Button
+                          key={dataId ? entry[dataId] : undefined}
+                          variant="ghost"
+                          className="h-auto w-full justify-start rounded-sm px-2 py-1 hover:bg-primary-400 hover:text-background"
+                          onClick={() => handleItemClick(entry)}
+                        >
+                          {React.cloneElement(itemComponent as React.ReactElement<any>, {
+                            item: entry,
+                          })}
+                        </Button>
+                      ) : null
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
+}
+
+DataSelector.SelectedItem = ({ item, children }: { item?: any; children: (item: any) => React.ReactNode }) => {
+  if (!item) throw new Error('DataSelector.SelectedItem must be used inside DataSelector');
+  return <>{children(item)}</>;
+};
+
+DataSelector.SearchInput = ({ children }: { children: React.ReactNode }) => <>{children}</>;
+
+DataSelector.Item = ({ item, children }: { item?: any; children: (item: any) => React.ReactNode }) => {
+  if (!item) throw new Error('DataSelector.Item must be used inside DataSelector');
+  return <>{children(item)}</>;
+};

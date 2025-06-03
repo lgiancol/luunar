@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Client } from '~/services/clients/clients.model';
 import { PaymentType } from '~/services/payments/payments.model';
 import { addPayment } from '~/services/payments/payments.service';

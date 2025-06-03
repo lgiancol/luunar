@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import passport from 'passport';
 import { User } from '../generated/prisma';
 import { registerUser } from '../services/auth.service';
-import { isErr } from '../types/result';
+import { isResultError } from '../types/result';
 import { ModelToResponseBodyMapper } from '../utils/controller.utils';
 
 export const register = async (req: Request, res: Response) => {
@@ -14,7 +14,7 @@ export const register = async (req: Request, res: Response) => {
 
   const userResult = await registerUser(first_name, last_name, email, password);
 
-  if (isErr(userResult)) {
+  if (isResultError(userResult)) {
     res.status(500).send({ error: userResult.error });
     return;
   }

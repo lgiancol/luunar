@@ -1,6 +1,6 @@
 export interface Client {
   id: string;
-  createdAt: string;
+  createdAt: Date;
 
   name: string;
   email: string | null;

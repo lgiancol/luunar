@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { CreateClientModel } from '../services/clients/clients.model';
 import { addClient, getClients } from '../services/clients/clients.service';
-import { isErr } from '../types/result';
+import { isResultError } from '../types/result';
 import { ModelToResponseBodyMapper } from '../utils/controller.utils';
 
 export const addClientHandler = async (req: Request, res: Response) => {
@@ -14,7 +14,7 @@ export const addClientHandler = async (req: Request, res: Response) => {
 
   const clientResult = await addClient(createClientModel);
 
-  if (isErr(clientResult)) {
+  if (isResultError(clientResult)) {
     res.status(500).json({ error: clientResult.error });
     return;
   }
@@ -31,7 +31,7 @@ export const getPaginatedClients = async (req: Request, res: Response) => {
   const { page, pageSize } = req.query as { page: string; pageSize: string };
 
   const result = await getClients({ page: parseInt(page), pageSize: parseInt(pageSize) });
-  if (isErr(result)) {
+  if (isResultError(result)) {
     res.status(500).json({ error: result.error });
     return;
   }

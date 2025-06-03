@@ -35,6 +35,37 @@ model Client {
     phone           String?
     notes           String?
     organization_id String // Will end up being a relation to the Organizations table
+    payments        Payment[]
 
     @@map("clients")
+}
+
+model Payment {
+    id         String   @id @default(cuid())
+    created_at DateTime @default(now())
+
+    type               String // Enum in code 'incoming' | 'outgoing'
+    received_at        DateTime
+    amount             Int
+    client_id          String?
+    invoice_id         String?
+    payment_account_id String
+
+    client          Client?        @relation(fields: [client_id], references: [id])
+    payment_account PaymentAccount @relation(fields: [payment_account_id], references: [id])
+
+    @@map("payments")
+}
+
+model PaymentAccount {
+    id         String   @id @default(cuid())
+    created_at DateTime @default(now())
+
+    name  String // "Stripe", "Bank Transfer", "Upwork", etc
+    type  String // optional: "platform", "bank", "card"
+    notes String? // optional internal info
+
+    payments Payment[]
+
+    @@map("payment_accounts")
 }

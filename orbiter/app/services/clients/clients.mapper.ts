@@ -4,7 +4,7 @@ import type { Client } from './clients.model';
 export function mapGetClientResponseDTO(dto: GetClientResponseDTO): Client {
   return {
     id: dto.id,
-    createdAt: dto.created_at,
+    createdAt: new Date(dto.created_at),
 
     name: dto.name,
     email: dto.email,

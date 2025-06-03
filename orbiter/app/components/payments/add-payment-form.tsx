@@ -7,25 +7,27 @@ import InputNumber from '../ui/input-number';
 import InputText from '../ui/input-text';
 
 interface AddPaymentFormProps {
-  clients: Client[] | undefined;
+  recentClients: Client[] | undefined;
+  filteredClients: Client[] | undefined;
 }
-export default function AddPaymentForm({ clients }: AddPaymentFormProps) {
+export default function AddPaymentForm({ recentClients, filteredClients }: AddPaymentFormProps) {
   const [type, setType] = useState<PaymentType>(PaymentType.incoming);
   const [receivedAt, setReceivedAt] = useState<Date>(new Date());
   const [amount, setAmount] = useState<number>(0);
-  const [clientId, setClientId] = useState<string>('');
+  const [client, setClient] = useState<Client>();
   const [paymentAccountId, setPaymentAccountId] = useState('test-payment-account-id');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Submit payment');
+
+    if (!client) return;
 
     try {
       const result = await addPayment({
         type,
         received_at: receivedAt,
         amount,
-        client_id: clientId,
+        client_id: client.id,
         payment_account_id: paymentAccountId,
       });
     } catch (err) {
@@ -80,7 +82,12 @@ export default function AddPaymentForm({ clients }: AddPaymentFormProps) {
               <label className="text-surface-text-500 mb-1 block text-sm font-medium" htmlFor="notes">
                 Client
               </label>
-              <ClientSelector clients={clients} />
+              <ClientSelector
+                selectedClient={client}
+                recentClients={recentClients}
+                filteredClients={filteredClients}
+                onSelect={(client) => setClient(client)}
+              />
             </div>
           </div>
         </div>

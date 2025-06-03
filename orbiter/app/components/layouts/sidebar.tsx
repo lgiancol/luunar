@@ -8,7 +8,7 @@ import Tooltip from '../ui/tooltip';
 
 const navItems = [
   { name: 'Dashboard', path: '/', icon: LayoutDashboard },
-  { name: 'Income', path: '/income', icon: DollarSign },
+  { name: 'Payments', path: '/payments', icon: DollarSign },
   { name: 'Expenses', path: '/expenses', icon: CreditCard },
   { name: 'Clients', path: '/clients', icon: UsersIcon },
   //   { name: 'Assets', path: '/assets', icon: Briefcase },
@@ -34,7 +34,7 @@ export default function Sidebar() {
   return (
     <aside
       className={clsx(
-        'bg-surface text-surface-text-500 relative flex h-screen flex-col bg-surface-500 border-r border-surface-border-300 transition-all duration-200',
+        'bg-surface text-surface-text-500 relative flex h-screen flex-col border-r border-surface-border-300 bg-surface-500 transition-all duration-200',
         collapsed ? 'w-[53px]' : 'w-64'
       )}
     >
@@ -77,7 +77,7 @@ export default function Sidebar() {
               'flex items-center gap-2 rounded-md px-2 py-2 text-sm transition-colors hover:bg-primary-300/20',
               //   NOTE: This needs to be fixed and made prettier... maybe
               (path === '/' && location.pathname === path) || (path !== '/' && location.pathname.startsWith(path))
-                ? 'text-primary-400 bg-primary-100 font-medium'
+                ? 'bg-primary-100 font-medium text-primary-400'
                 : 'text-text-primary-500'
             )}
           >

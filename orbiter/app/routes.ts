@@ -5,7 +5,7 @@ export default [
   route('register', 'routes/auth/register.tsx'),
   layout('./layouts/app-layout.tsx', [
     index('./routes/dashboard/dashboard-page.tsx'), //
-    route('income', './routes/income/income-page.tsx'),
+    route('payments', './routes/payments/payments-page.tsx'),
     route('expenses', './routes/expenses/expenses-page.tsx'),
     route('expenses/add', './routes/expenses/add/add-expenses-page.tsx'),
     route('clients', './routes/clients/clients-page.tsx'),

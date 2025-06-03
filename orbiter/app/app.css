@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 @import './resources/theme/theme.css';
-@import "tw-animate-css";
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -127,4 +127,11 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.PopoverContent {
+  transform-origin: var(--radix-popover-content-transform-origin);
+  animation: scaleIn 0.5s ease-out;
+
+  width: var(--radix-popover-trigger-width);
 }

@@ -20,3 +20,10 @@ export async function getClients({ page, pageSize }: PaginatedPayloadDTO): Promi
     mapPaginatedResponseDTO(mapGetClientResponseDTO)
   );
 }
+
+export async function getRecentClients(limit: number): Promise<Result<PaginatedResponse<Client>>> {
+  return apiGet<PaginatedResponseDTO<GetClientResponseDTO>, PaginatedResponse<Client>>(
+    `/clients/recent?limit=${limit}`,
+    mapPaginatedResponseDTO(mapGetClientResponseDTO)
+  );
+}

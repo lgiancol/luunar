@@ -1,12 +1,15 @@
 import { useState } from 'react';
+import type { Client } from '~/services/clients/clients.model';
 import { PaymentType } from '~/services/payments/payments.model';
 import { addPayment } from '~/services/payments/payments.service';
+import ClientSelector from '../shared/client-selector';
 import InputNumber from '../ui/input-number';
 import InputText from '../ui/input-text';
-import InputTextarea from '../ui/input-textarea';
 
-interface AddPaymentFormProps {}
-export default function AddPaymentForm({}: AddPaymentFormProps) {
+interface AddPaymentFormProps {
+  clients: Client[] | undefined;
+}
+export default function AddPaymentForm({ clients }: AddPaymentFormProps) {
   const [type, setType] = useState<PaymentType>(PaymentType.incoming);
   const [receivedAt, setReceivedAt] = useState<Date>(new Date());
   const [amount, setAmount] = useState<number>(0);
@@ -77,7 +80,7 @@ export default function AddPaymentForm({}: AddPaymentFormProps) {
               <label className="text-surface-text-500 mb-1 block text-sm font-medium" htmlFor="notes">
                 Client
               </label>
-              <InputTextarea id="notes" defaultValue={clientId} onChange={(e) => setClientId(e.target.value)} />
+              <ClientSelector clients={clients} />
             </div>
           </div>
         </div>

@@ -3,17 +3,24 @@ import { useEffect, useState } from 'react';
 import AddPaymentForm from '~/components/payments/add-payment-form';
 import PageDetailsDrawer from '~/components/shared/page-details-drawer';
 import { Button } from '~/components/ui/button';
+import { useRecentClients } from '~/hooks/clients/useRecentClients';
 import { usePaginatedPayments } from '~/hooks/payments/userPaginatedPayments';
 import { useRedirectIfUnauthenticated } from '~/hooks/useRedirectIfUnauthenticated';
+import type { Client } from '~/services/clients/clients.model';
 
 export default function PaymentsPage() {
   useRedirectIfUnauthenticated();
   const { paymentsPage, loading } = usePaginatedPayments({ page: 1, pageSize: 5 });
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
+  const { clientsPage: recentClientsPage } = useRecentClients(15);
+  //   const { clientsPage: searchClients } = usePaginatedClients({ page: 1, pageSize: 5 });
+  const [clients, setClients] = useState<Client[]>();
 
   useEffect(() => {
-    console.log(drawerOpen);
-  }, [drawerOpen]);
+    if (!clients) {
+      setClients(recentClientsPage?.data);
+    }
+  }, [recentClientsPage]);
 
   if (loading) {
     return (
@@ -43,7 +50,7 @@ export default function PaymentsPage() {
 
       <PageDetailsDrawer open={drawerOpen} title="Add Payment" onOpenChange={setDrawerOpen}>
         <PageDetailsDrawer.Content>
-          <AddPaymentForm />
+          <AddPaymentForm clients={clients} />
         </PageDetailsDrawer.Content>
         <PageDetailsDrawer.Footer>
           <div className="flex justify-end">

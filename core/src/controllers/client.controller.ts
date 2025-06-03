@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { CreateClientModel } from '../services/clients/clients.model';
-import { addClient, getClients } from '../services/clients/clients.service';
+import * as clientsService from '../services/clients/clients.service';
 import { isResultError } from '../types/result';
 import { ModelToResponseBodyMapper } from '../utils/controller.utils';
 
@@ -12,7 +12,7 @@ export const addClientHandler = async (req: Request, res: Response) => {
 
   const createClientModel = req.body as CreateClientModel;
 
-  const clientResult = await addClient(createClientModel);
+  const clientResult = await clientsService.addClient(createClientModel);
 
   if (isResultError(clientResult)) {
     res.status(500).json({ error: clientResult.error });
@@ -30,7 +30,24 @@ export const getPaginatedClients = async (req: Request, res: Response) => {
 
   const { page, pageSize } = req.query as { page: string; pageSize: string };
 
-  const result = await getClients({ page: parseInt(page), pageSize: parseInt(pageSize) });
+  const result = await clientsService.indexClients({ page: parseInt(page), pageSize: parseInt(pageSize) });
+  if (isResultError(result)) {
+    res.status(500).json({ error: result.error });
+    return;
+  }
+
+  res.json(ModelToResponseBodyMapper(result.data));
+};
+
+export const getRecentClients = async (req: Request, res: Response) => {
+  if (!req.isAuthenticated()) {
+    res.status(401).json({ error: 'Unauthorized' });
+    return;
+  }
+
+  const { limit } = req.query as { limit: string };
+
+  const result = await clientsService.fetchRecentClients(parseInt(limit));
   if (isResultError(result)) {
     res.status(500).json({ error: result.error });
     return;

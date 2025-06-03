@@ -17,7 +17,7 @@ export async function createClient(data: CreateClientModel): Promise<Result<Clie
   }
 }
 
-export async function getClientsPaginated({
+export async function fetchClientsPaginated({
   page,
   pageSize,
 }: PaginatedPayload): Promise<Result<PaginatedResultData<ClientModel>>> {
@@ -40,6 +40,33 @@ export async function getClientsPaginated({
         pageSize,
         total,
         totalPages: Math.ceil(total / pageSize),
+      },
+    } satisfies PaginatedResultData<ClientEntity>;
+
+    return resultSuccess(paginationData, mapPaginatedEntities(mapClientEntityToModel));
+  } catch (e: any) {
+    const message = e.message ?? 'Failed to get Clients';
+    return resultError(message);
+  }
+}
+
+export async function fetchRecentClients(limit: number): Promise<Result<PaginatedResultData<ClientModel>>> {
+  try {
+    const [clients, total] = await prisma.$transaction([
+      prisma.client.findMany({
+        take: limit,
+        orderBy: { created_at: 'desc' },
+      }),
+      prisma.client.count(),
+    ]);
+
+    const paginationData = {
+      data: clients,
+      meta: {
+        page: 1,
+        pageSize: limit,
+        total,
+        totalPages: Math.ceil(total / limit),
       },
     } satisfies PaginatedResultData<ClientEntity>;
 

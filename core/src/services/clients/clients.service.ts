@@ -1,11 +1,15 @@
-import { createClient, getClientsPaginated } from '../../repositories/clients/clients.repository';
+import * as clientsRespository from '../../repositories/clients/clients.repository';
 import { PaginatedPayload } from '../../utils/pagination.utils';
 import { CreateClientModel } from './clients.model';
 
 export async function addClient(data: CreateClientModel) {
-  return createClient(data);
+  return clientsRespository.createClient(data);
 }
 
-export async function getClients(data: PaginatedPayload) {
-  return getClientsPaginated(data);
+export async function indexClients(data: PaginatedPayload) {
+  return clientsRespository.fetchClientsPaginated(data);
+}
+
+export async function fetchRecentClients(limit: number) {
+  return clientsRespository.fetchRecentClients(limit);
 }

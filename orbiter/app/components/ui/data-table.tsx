@@ -7,7 +7,7 @@ import {
 } from '@tanstack/react-table';
 
 import clsx from 'clsx';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table';
+import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '~/components/ui/table';
 import { Button } from './button';
 
 interface DataTableProps<TData, TValue> {
@@ -25,7 +25,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
 
   return (
     <div>
-      <div className="overflow-hidden rounded-xl border border-surface-600">
+      <div className="overflow-hidden rounded-md border border-surface-600">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -64,6 +64,19 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
               </TableRow>
             )}
           </TableBody>
+          <TableFooter>
+            {table.getFooterGroups().map((footerGroup) => (
+              <TableRow key={footerGroup.id}>
+                {footerGroup.headers.map((footer) => {
+                  return (
+                    <TableHead key={footer.id} style={{ width: `${footer.getSize()}px` }}>
+                      {footer.isPlaceholder ? null : flexRender(footer.column.columnDef.footer, footer.getContext())}
+                    </TableHead>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </TableFooter>
         </Table>
       </div>
 

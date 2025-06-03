@@ -80,6 +80,22 @@ const columns: ColumnDef<Client>[] = [
         </div>
       );
     },
+    footer: ({ table }) => {
+      const amount = table.getRowModel().rows.reduce((total, row) => {
+        // return total + row.getValue<Client>()
+        return total + 1000;
+      }, 0);
+      const formatted = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'CAD',
+      }).format(amount);
+
+      return (
+        <div className="flex h-full w-full items-center">
+          <p className="font-bold">{formatted}</p>
+        </div>
+      );
+    },
   },
   {
     accessorKey: 'phone',

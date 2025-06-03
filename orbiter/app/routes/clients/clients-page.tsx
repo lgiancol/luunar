@@ -1,4 +1,5 @@
 import { PlusIcon } from 'lucide-react';
+import { Link } from 'react-router';
 import ClientList from '~/components/clients/client-list/client-list';
 import { Button } from '~/components/ui/button';
 import { usePaginatedClients } from '~/hooks/clients/usePaginatedClients';
@@ -16,10 +17,6 @@ export default function ClientsPage() {
     );
   }
 
-  const goToAddNewClientPage = () => {
-    console.log('Go to add new client page');
-  };
-
   return (
     <div>
       <div className="flex flex-col gap-2">
@@ -29,15 +26,12 @@ export default function ClientsPage() {
           </div>
 
           <div>
-            <Button
-              variant="outline"
-              onClick={() => {
-                goToAddNewClientPage();
-              }}
-            >
-              <PlusIcon />
-              Add Client
-            </Button>
+            <Link to="/clients/add">
+              <Button variant="outline">
+                <PlusIcon />
+                Add Client
+              </Button>
+            </Link>
           </div>
         </div>
         <ClientList page={clientsPage} />

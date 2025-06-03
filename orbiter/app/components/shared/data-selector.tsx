@@ -2,11 +2,12 @@ import clsx from 'clsx';
 import { ChevronDown } from 'lucide-react';
 import React, { useCallback, useMemo, useState } from 'react';
 import { Button } from '../ui/button';
+import InputText from '../ui/input-text';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 
 interface DataSelectorProps<T> {
   id?: string;
-  emptyText?: string;
+  dataType?: string;
   dataId?: string;
 
   selectedEntry?: T;
@@ -20,7 +21,7 @@ interface DataSelectorProps<T> {
 export default function DataSelector<T>({
   id,
   dataId,
-  emptyText = 'Find or add...',
+  dataType = 'item',
   selectedEntry,
   recentList,
   filteredList,
@@ -29,9 +30,6 @@ export default function DataSelector<T>({
   children,
 }: DataSelectorProps<T>) {
   const itemComponent = React.Children.toArray(children).find((child: any) => child.type === DataSelector.Item);
-  const searchInputComponent = React.Children.toArray(children).find(
-    (child: any) => child.type === DataSelector.SearchInput
-  );
   let selectedItemComponent = React.Children.toArray(children).find(
     (child: any) => child.type === DataSelector.SelectedItem
   );
@@ -72,7 +70,7 @@ export default function DataSelector<T>({
                 })
               ) : null
             ) : (
-              <div>{emptyText}</div>
+              <div>Find or add {dataType}...</div>
             )}
             <ChevronDown className={clsx({ '-rotate-180': showList })} />
           </Button>
@@ -84,7 +82,9 @@ export default function DataSelector<T>({
           <div className="w-full">
             <div className="rounded-md">
               <div className="flex flex-col gap-2">
-                {searchInputComponent ? <div>{searchInputComponent}</div> : null}
+                <div>
+                  <InputText placeholder={`Search for ${dataType}...`} className="text-sm" />
+                </div>
 
                 <div>
                   <div className="flex flex-col gap-1">
@@ -118,8 +118,6 @@ DataSelector.SelectedItem = ({ item, children }: { item?: any; children: (item: 
   if (!item) throw new Error('DataSelector.SelectedItem must be used inside DataSelector');
   return <>{children(item)}</>;
 };
-
-DataSelector.SearchInput = ({ children }: { children: React.ReactNode }) => <>{children}</>;
 
 DataSelector.Item = ({ item, children }: { item?: any; children: (item: any) => React.ReactNode }) => {
   if (!item) throw new Error('DataSelector.Item must be used inside DataSelector');

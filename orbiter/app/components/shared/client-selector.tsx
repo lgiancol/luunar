@@ -27,7 +27,13 @@ export default function ClientSelector({
   }, [recentClients, filteredClients]);
 
   return (
-    <DataSelector dataId="id" recentList={recentClients} selectedEntry={selectedClient} onSelect={onSelect}>
+    <DataSelector
+      dataId="id"
+      dataType="clients"
+      recentList={recentClients}
+      selectedEntry={selectedClient}
+      onSelect={onSelect}
+    >
       <DataSelector.SelectedItem>
         {(selectedClient: Client) => (
           <div className="flex items-baseline gap-1 text-left">
@@ -36,10 +42,6 @@ export default function ClientSelector({
           </div>
         )}
       </DataSelector.SelectedItem>
-
-      <DataSelector.SearchInput>
-        <InputText placeholder="Search for clients..." className="text-sm" />
-      </DataSelector.SearchInput>
 
       <DataSelector.Item>{(client: Client) => <div key={client.id}>{client.name}</div>}</DataSelector.Item>
     </DataSelector>

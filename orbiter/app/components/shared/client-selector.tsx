@@ -1,7 +1,5 @@
 import { useMemo } from 'react';
 import type { Client } from '~/services/clients/clients.model';
-import { Button } from '../ui/button';
-import InputText from '../ui/input-text';
 import DataSelector from './data-selector';
 
 interface ClientSelectorProps {

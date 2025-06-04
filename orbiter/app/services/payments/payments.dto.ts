@@ -1,6 +1,6 @@
 import type { GetClientResponseDTO } from '../clients/clients.dto';
 import type { GetPaymentAccountResponseDTO } from './payment_accounts.dto';
-import type { PaymentType } from './payments.model';
+import type { PaymentType } from './payment.model';
 
 export interface AddPaymentPayloadDTO {
   type: PaymentType;

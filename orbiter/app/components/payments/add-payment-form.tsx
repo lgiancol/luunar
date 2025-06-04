@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import type { Client } from '~/services/clients/clients.model';
 import type { PaymentAccount } from '~/services/payments/payment-account.model';
-import { PaymentType } from '~/services/payments/payments.model';
+import { PaymentType } from '~/services/payments/payment.model';
 import { addPayment } from '~/services/payments/payments.service';
 import ClientSelector from '../shared/client-selector';
 import PaymentAccountSelector from '../shared/payment-account-selector';
+import PaymentTypeSelector from '../shared/payment-type-selector';
 import InputNumber from '../ui/input-number';
 import InputText from '../ui/input-text';
 
@@ -92,15 +93,24 @@ export default function AddPaymentForm({
             </div>
             <div>
               <label className="text-surface-text-500 mb-1 block text-sm font-medium" htmlFor="notes">
-                Client
+                Source
               </label>
-              <ClientSelector
-                selectedClient={client}
-                recentClients={recentClients}
-                filteredClients={filteredClients}
-                onSelect={(client) => setClient(client)}
-                onAddClient={onAddClient}
-              />
+              <div className="flex w-full items-center gap-1">
+                <div className="flex-shrink-1">
+                  <div>
+                    <PaymentTypeSelector selectedPaymentType={type} onPaymentTypeSelect={setType} />
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <ClientSelector
+                    selectedClient={client}
+                    recentClients={recentClients}
+                    filteredClients={filteredClients}
+                    onSelect={(client) => setClient(client)}
+                    onAddClient={onAddClient}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>

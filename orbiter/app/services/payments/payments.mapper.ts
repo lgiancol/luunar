@@ -1,7 +1,7 @@
 import { mapGetClientResponseDTO } from '../clients/clients.mapper';
 import { mapGetPaymentAccountResponseDTO } from './payment-accounts.mapper';
 import type { GetPaymentResponseDTO } from './payments.dto';
-import type { Payment } from './payments.model';
+import type { Payment } from './payment.model';
 
 export function mapGetPaymentResponseDTO(dto: GetPaymentResponseDTO): Payment {
   return {

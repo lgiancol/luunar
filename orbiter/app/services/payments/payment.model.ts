@@ -6,6 +6,8 @@ export enum PaymentType {
   'outgoing' = 'outgoing',
 }
 
+export const paymentTypes = [...new Set<PaymentType>([PaymentType.incoming, PaymentType.outgoing])];
+
 export interface Payment {
   id: string;
   createdAt: Date;

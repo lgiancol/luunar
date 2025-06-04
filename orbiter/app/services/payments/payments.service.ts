@@ -8,7 +8,7 @@ import type { Result } from '~/types/result';
 import { apiGet, apiPost } from '~/utils/api';
 import type { AddPaymentPayloadDTO, GetPaymentResponseDTO } from './payments.dto';
 import { mapGetPaymentResponseDTO } from './payments.mapper';
-import type { Payment } from './payments.model';
+import type { Payment } from './payment.model';
 
 export async function addPayment(payload: AddPaymentPayloadDTO): Promise<Result<Payment>> {
   return apiPost('/payments', payload, mapGetPaymentResponseDTO);

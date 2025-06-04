@@ -9,6 +9,8 @@ interface DataSelectorProps<T> {
   id?: string;
   dataType?: string;
   dataId?: string;
+  showAdd?: boolean;
+  showSearch?: boolean;
 
   selectedEntry?: T;
   recentList?: T[];
@@ -19,10 +21,13 @@ interface DataSelectorProps<T> {
 
   children: React.ReactNode;
 }
-export default function DataSelector<T>({
+export default function DataSelector<T = any>({
   id,
-  dataId,
   dataType = 'item',
+  dataId,
+  showAdd = true,
+  showSearch = true,
+
   selectedEntry,
   recentList,
   filteredList,
@@ -64,6 +69,15 @@ export default function DataSelector<T>({
     setShowList(false);
   }, [selectedEntry]);
 
+  const isItemSelected = useCallback(
+    (item: any) => {
+      if (!selectedEntry || !dataId) return false;
+
+      return item[dataId] === (selectedEntry as any)[dataId];
+    },
+    [selectedEntry]
+  );
+
   return (
     <div id={id} className="relative flex flex-col gap-1">
       <Popover open={showList} onOpenChange={setShowList} modal>
@@ -88,25 +102,31 @@ export default function DataSelector<T>({
           <div className="w-full">
             <div className="rounded-md">
               <div className="flex flex-col gap-2">
-                <div>
-                  <InputText placeholder={`Search for ${dataType}...`} className="text-sm" />
-                </div>
+                {showSearch && (
+                  <div>
+                    <InputText placeholder={`Search for ${dataType}...`} className="text-sm" />
+                  </div>
+                )}
 
                 <div>
                   <div className="flex flex-col gap-1">
-                    <Button
-                      variant="ghost"
-                      className="h-auto w-full border border-surface-border-300 bg-surface-300 py-1"
-                      type="button"
-                      onClick={onAddItem}
-                    >
-                      <PlusIcon />
-                      Add new {dataType}
-                    </Button>
+                    {showAdd && (
+                      <>
+                        <Button
+                          variant="ghost"
+                          className="h-auto w-full border border-surface-border-300 bg-surface-300 py-1"
+                          type="button"
+                          onClick={onAddItem}
+                        >
+                          <PlusIcon />
+                          Add new {dataType}
+                        </Button>
 
-                    <div className="my-1">
-                      <hr className="border-surface-border-300" />
-                    </div>
+                        <div className="my-1">
+                          <hr className="border-surface-border-300" />
+                        </div>
+                      </>
+                    )}
 
                     {entries.label && <div className="text-sm font-bold">{entries.label}</div>}
                     {entries.data?.map((entry: any) =>
@@ -114,7 +134,12 @@ export default function DataSelector<T>({
                         <Button
                           key={dataId ? entry[dataId] : undefined}
                           variant="ghost"
-                          className="h-auto w-full justify-start rounded-sm px-2 py-1 hover:bg-primary-400 hover:text-background"
+                          className={clsx(
+                            'h-auto w-full justify-start rounded-sm px-2 py-1 hover:bg-primary-400 hover:text-background',
+                            {
+                              'text-primary-400 bg-primary-300/20': isItemSelected(entry),
+                            }
+                          )}
                           onClick={() => handleItemClick(entry)}
                         >
                           {React.cloneElement(itemComponent as React.ReactElement<any>, {

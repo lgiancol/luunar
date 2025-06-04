@@ -1,4 +1,4 @@
-import type { Payment } from './payments.model';
+import type { Payment } from './payment.model';
 
 export interface PaymentAccount {
   id: string;

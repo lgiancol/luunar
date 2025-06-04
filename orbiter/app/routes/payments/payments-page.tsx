@@ -11,7 +11,7 @@ import type { Client } from '~/services/clients/clients.model';
 export default function PaymentsPage() {
   useRedirectIfUnauthenticated();
   const { paymentsPage, loading } = usePaginatedPayments({ page: 1, pageSize: 5 });
-  const [addPaymentDrawerOpen, setAddPaymentDrawerOpen] = useState<boolean>(false);
+  const [addPaymentDrawerOpen, setAddPaymentDrawerOpen] = useState<boolean>(true);
   const [addClientDrawer, setAddClientDrawer] = useState<boolean>(false);
   const { clientsPage: recentClientsPage } = useRecentClients(15);
   const [selectedClient, setSelectedClient] = useState<Client>();

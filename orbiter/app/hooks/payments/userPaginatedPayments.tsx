@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { Payment } from '~/services/payments/payments.model';
+import type { Payment } from '~/services/payments/payment.model';
 import { getPayments } from '~/services/payments/payments.service';
 import type { PaginatedPayloadDTO, PaginatedResponse } from '~/shared/pagination';
 import { isResultError } from '~/types/result';

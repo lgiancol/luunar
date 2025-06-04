@@ -1,6 +1,6 @@
 import clsx from 'clsx';
-import { ChevronDown } from 'lucide-react';
-import React, { useCallback, useMemo, useState } from 'react';
+import { ChevronDown, PlusIcon } from 'lucide-react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Button } from '../ui/button';
 import InputText from '../ui/input-text';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
@@ -15,6 +15,7 @@ interface DataSelectorProps<T> {
   filteredList?: T[];
   loadNextPage?: () => void;
   onSelect?: (item?: T) => void;
+  onAddItem?: () => void;
 
   children: React.ReactNode;
 }
@@ -27,6 +28,7 @@ export default function DataSelector<T>({
   filteredList,
   loadNextPage,
   onSelect,
+  onAddItem,
   children,
 }: DataSelectorProps<T>) {
   const itemComponent = React.Children.toArray(children).find((child: any) => child.type === DataSelector.Item);
@@ -58,6 +60,10 @@ export default function DataSelector<T>({
     [selectedEntry, onSelect]
   );
 
+  useEffect(() => {
+    setShowList(false);
+  }, [selectedEntry]);
+
   return (
     <div id={id} className="relative flex flex-col gap-1">
       <Popover open={showList} onOpenChange={setShowList} modal>
@@ -88,6 +94,20 @@ export default function DataSelector<T>({
 
                 <div>
                   <div className="flex flex-col gap-1">
+                    <Button
+                      variant="ghost"
+                      className="h-auto w-full border border-surface-border-300 bg-surface-300 py-1"
+                      type="button"
+                      onClick={onAddItem}
+                    >
+                      <PlusIcon />
+                      Add new {dataType}
+                    </Button>
+
+                    <div className="my-1">
+                      <hr className="border-surface-border-300" />
+                    </div>
+
                     {entries.label && <div className="text-sm font-bold">{entries.label}</div>}
                     {entries.data?.map((entry: any) =>
                       itemComponent ? (

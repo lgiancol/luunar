@@ -1,26 +1,39 @@
 import { useEffect, useState } from 'react';
 import type { Client } from '~/services/clients/clients.model';
+import type { PaymentAccount } from '~/services/payments/payment-account.model';
 import { PaymentType } from '~/services/payments/payments.model';
 import { addPayment } from '~/services/payments/payments.service';
 import ClientSelector from '../shared/client-selector';
+import PaymentAccountSelector from '../shared/payment-account-selector';
 import InputNumber from '../ui/input-number';
 import InputText from '../ui/input-text';
 
 interface AddPaymentFormProps {
-  recentClients: Client[] | undefined;
-  filteredClients: Client[] | undefined;
+  recentClients?: Client[];
+  filteredClients?: Client[];
+  selectedClient?: Client;
+  onAddClient?: () => void;
 }
-export default function AddPaymentForm({ recentClients, filteredClients }: AddPaymentFormProps) {
+export default function AddPaymentForm({
+  recentClients,
+  filteredClients,
+  selectedClient,
+  onAddClient,
+}: AddPaymentFormProps) {
   const [type, setType] = useState<PaymentType>(PaymentType.incoming);
   const [receivedAt, setReceivedAt] = useState<Date>(new Date());
   const [amount, setAmount] = useState<number>(0);
-  const [client, setClient] = useState<Client>();
-  const [paymentAccountId, setPaymentAccountId] = useState('test-payment-account-id');
+  const [client, setClient] = useState<Client | undefined>(selectedClient);
+  const [paymentAccount, setPaymentAccount] = useState<PaymentAccount>();
+
+  useEffect(() => {
+    setClient(selectedClient);
+  }, [selectedClient]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!client) return;
+    if (!client || !paymentAccount) return;
 
     try {
       const result = await addPayment({
@@ -28,7 +41,7 @@ export default function AddPaymentForm({ recentClients, filteredClients }: AddPa
         received_at: receivedAt,
         amount,
         client_id: client.id,
-        payment_account_id: paymentAccountId,
+        payment_account_id: paymentAccount.id,
       });
     } catch (err) {
       console.error('addPayment failed:', err);
@@ -64,11 +77,10 @@ export default function AddPaymentForm({ recentClients, filteredClients }: AddPa
               <label className="text-surface-text-500 mb-1 block text-sm font-medium" htmlFor="organizationId">
                 Payment Account
               </label>
-              <InputText
-                id="organizationId"
-                type="text"
-                value={paymentAccountId}
-                onChange={(e) => setPaymentAccountId(e.target.value)}
+              <PaymentAccountSelector
+                selectedPaymentAccount={undefined}
+                paymentAccounts={undefined}
+                onSelect={(pA) => setPaymentAccount(pA)}
               />
             </div>
 
@@ -87,6 +99,7 @@ export default function AddPaymentForm({ recentClients, filteredClients }: AddPa
                 recentClients={recentClients}
                 filteredClients={filteredClients}
                 onSelect={(client) => setClient(client)}
+                onAddClient={onAddClient}
               />
             </div>
           </div>

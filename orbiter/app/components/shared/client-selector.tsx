@@ -10,6 +10,7 @@ interface ClientSelectorProps {
   filteredClients?: Client[];
   loadNextPage?: () => void;
   onSelect?: (client?: Client) => void;
+  onAddClient?: () => void;
 }
 export default function ClientSelector({
   selectedClient,
@@ -17,6 +18,7 @@ export default function ClientSelector({
   filteredClients,
   loadNextPage,
   onSelect,
+  onAddClient,
 }: ClientSelectorProps) {
   const clients = useMemo(() => {
     const clients = filteredClients ? filteredClients : recentClients;
@@ -33,6 +35,7 @@ export default function ClientSelector({
       recentList={recentClients}
       selectedEntry={selectedClient}
       onSelect={onSelect}
+      onAddItem={onAddClient}
     >
       <DataSelector.SelectedItem>
         {(selectedClient: Client) => (
@@ -43,7 +46,7 @@ export default function ClientSelector({
         )}
       </DataSelector.SelectedItem>
 
-      <DataSelector.Item>{(client: Client) => <div key={client.id}>{client.name}</div>}</DataSelector.Item>
+      <DataSelector.Item>{(client: Client) => <div>{client.name}</div>}</DataSelector.Item>
     </DataSelector>
   );
 }

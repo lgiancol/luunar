@@ -8,11 +8,17 @@ import {
   DrawerTitle,
 } from '~/components/ui/drawer';
 
+function getDrawerOffset(level: number): number {
+  return level === 0 ? 0 : 20 * level + 20 / level; // adjust constants to tune feel
+}
+
 interface PageDetailsDrawerProps {
   open?: boolean;
   title?: string;
   subtitle?: string;
   children: React.ReactNode;
+  className?: string;
+  level: number;
   onOpenChange?: (open: boolean) => void;
 }
 export default function PageDetailsDrawer({
@@ -20,6 +26,8 @@ export default function PageDetailsDrawer({
   onOpenChange,
   title,
   subtitle,
+  level,
+  className,
   children,
 }: PageDetailsDrawerProps) {
   const content = React.Children.toArray(children).find((child: any) => child.type === PageDetailsDrawer.Content);
@@ -27,7 +35,10 @@ export default function PageDetailsDrawer({
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange} direction="right" handleOnly>
-      <DrawerContent className="w-full max-w-[900px]">
+      <DrawerContent
+        className="w-full max-w-[900px]"
+        style={{ marginRight: `${getDrawerOffset(level)}px`, transitionProperty: 'margin' }}
+      >
         {(title?.length || subtitle?.length) && (
           <DrawerHeader>
             {title?.length && <DrawerTitle>{title}</DrawerTitle>}

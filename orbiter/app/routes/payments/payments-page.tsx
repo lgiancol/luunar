@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import AddPaymentForm from '~/components/payments/add-payment-form';
 import PageDetailsDrawer from '~/components/shared/page-details-drawer';
 import AddPaymentAccountForm from '~/components/shared/payment-accounts/add-payment-account-form';
+import PaymentsList from '~/components/shared/payments/payments-list';
 import { Button } from '~/components/ui/button';
 import { useRecentClients } from '~/hooks/clients/useRecentClients';
 import { useRecentPaymentAccounts } from '~/hooks/payment-accounts/useRecentPaymentAccounts';
@@ -14,7 +15,7 @@ import type { PaymentAccount } from '~/services/payments/payment-account.model';
 export default function PaymentsPage() {
   useRedirectIfUnauthenticated();
   const { paymentsPage, loading, refresh: refreshPayments } = usePaginatedPayments({ page: 1, pageSize: 5 });
-  const [addPaymentDrawerOpen, setAddPaymentDrawerOpen] = useState<boolean>(true);
+  const [addPaymentDrawerOpen, setAddPaymentDrawerOpen] = useState<boolean>(false);
   const [addClientDrawerOpen, setAddClientDrawerOpen] = useState<boolean>(false);
   const [addPaymentAccountDrawerOpen, setAddPaymentAccountDrawerOpen] = useState<boolean>(false);
   const { clientsPage: recentClientsPage } = useRecentClients(15);
@@ -50,7 +51,9 @@ export default function PaymentsPage() {
             </Button>
           </div>
         </div>
-        <div>{paymentsPage?.meta.total}</div>
+        <div>
+          <PaymentsList paymentsPage={paymentsPage} />
+        </div>
       </div>
 
       <PageDetailsDrawer

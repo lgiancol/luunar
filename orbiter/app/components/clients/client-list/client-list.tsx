@@ -41,7 +41,7 @@ const columns: ColumnDef<Client>[] = [
     header: 'Name',
     cell: ({ row }) => (
       <div className="h-full w-full">
-        <Link to={`/clients/${row.getValue<string>('select')}`} className="flex h-full w-full items-center p-2">
+        <Link to={`/clients/${row.getValue<string>('select')}`} className="flex h-full w-full items-center p-3">
           {row.getValue<string>('name')}
         </Link>
       </div>
@@ -52,7 +52,7 @@ const columns: ColumnDef<Client>[] = [
     header: 'Email',
     cell: ({ row }) => (
       <div className="h-full w-full">
-        <Link to={`/clients/${row.getValue<string>('select')}`} className="flex h-full w-full items-center p-2">
+        <Link to={`/clients/${row.getValue<string>('select')}`} className="flex h-full w-full items-center p-3">
           {row.getValue<string>('email')}
         </Link>
       </div>
@@ -74,7 +74,7 @@ const columns: ColumnDef<Client>[] = [
 
       return (
         <div className="h-full w-full">
-          <Link to={`/clients/${row.getValue<string>('select')}`} className="flex h-full w-full items-center p-2">
+          <Link to={`/clients/${row.getValue<string>('select')}`} className="flex h-full w-full items-center p-3">
             {formatted}
           </Link>
         </div>
@@ -104,7 +104,7 @@ const columns: ColumnDef<Client>[] = [
     },
     cell: ({ row }) => (
       <div className="h-full w-full">
-        <Link to={`/clients/${row.getValue<string>('select')}`} className="flex h-full w-full items-center p-2">
+        <Link to={`/clients/${row.getValue<string>('select')}`} className="flex h-full w-full items-center p-3">
           {row.getValue<string>('phone')}
         </Link>
       </div>

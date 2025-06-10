@@ -51,7 +51,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                         'border-b border-b-surface-border-300': row.index < table.getRowModel().rows.length - 1,
                       })}
                     >
-                      <div className="h-[64px]">{flexRender(cell.column.columnDef.cell, cell.getContext())}</div>
+                      <div className="h-[48px]">{flexRender(cell.column.columnDef.cell, cell.getContext())}</div>
                     </TableCell>
                   ))}
                 </TableRow>

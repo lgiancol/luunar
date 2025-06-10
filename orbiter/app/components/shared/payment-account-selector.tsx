@@ -5,11 +5,13 @@ interface PaymentAccountSelectorProps {
   selectedPaymentAccount?: PaymentAccount;
   paymentAccounts?: PaymentAccount[];
   onSelect?: (pA?: PaymentAccount) => void;
+  onAddPaymentAccount?: () => void;
 }
 export default function PaymentAccountSelector({
   selectedPaymentAccount,
   paymentAccounts,
   onSelect,
+  onAddPaymentAccount,
 }: PaymentAccountSelectorProps) {
   return (
     <DataSelector
@@ -18,6 +20,7 @@ export default function PaymentAccountSelector({
       recentList={paymentAccounts}
       selectedEntry={selectedPaymentAccount}
       onSelect={onSelect}
+      onAddItem={onAddPaymentAccount}
     >
       <DataSelector.SelectedItem>
         {(selected: PaymentAccount) => (

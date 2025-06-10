@@ -51,7 +51,7 @@ export async function getPaymentsPaginated({
 
     return resultSuccess(paginationData, mapPaginatedEntities(mapPaymentEntityToModel));
   } catch (e: any) {
-    const message = e.message ?? 'Failed to create Client';
+    const message = e.message ?? 'Failed to get Payments';
     return resultError(message);
   }
 }

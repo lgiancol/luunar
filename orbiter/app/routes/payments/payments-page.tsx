@@ -1,21 +1,31 @@
 import { PlusIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import AddPaymentForm from '~/components/payments/add-payment-form';
 import PageDetailsDrawer from '~/components/shared/page-details-drawer';
+import AddPaymentAccountForm from '~/components/shared/payment-accounts/add-payment-account-form';
 import { Button } from '~/components/ui/button';
 import { useRecentClients } from '~/hooks/clients/useRecentClients';
+import { useRecentPaymentAccounts } from '~/hooks/payment-accounts/useRecentPaymentAccounts';
 import { usePaginatedPayments } from '~/hooks/payments/userPaginatedPayments';
 import { useRedirectIfUnauthenticated } from '~/hooks/useRedirectIfUnauthenticated';
 import type { Client } from '~/services/clients/clients.model';
+import type { PaymentAccount } from '~/services/payments/payment-account.model';
 
 export default function PaymentsPage() {
   useRedirectIfUnauthenticated();
   const { paymentsPage, loading } = usePaginatedPayments({ page: 1, pageSize: 5 });
   const [addPaymentDrawerOpen, setAddPaymentDrawerOpen] = useState<boolean>(true);
-  const [addClientDrawer, setAddClientDrawer] = useState<boolean>(false);
+  const [addClientDrawerOpen, setAddClientDrawerOpen] = useState<boolean>(false);
+  const [addPaymentAccountDrawerOpen, setAddPaymentAccountDrawerOpen] = useState<boolean>(false);
   const { clientsPage: recentClientsPage } = useRecentClients(15);
+  const { paymentAccountsPage: recentPaymentAccountsPage, refresh: refreshPaymentAccounts } =
+    useRecentPaymentAccounts(15);
   const [selectedClient, setSelectedClient] = useState<Client>();
-  //   const { clientsPage: searchClients } = usePaginatedClients({ page: 1, pageSize: 5 });
+  const [selectedPaymentAccount, setSelectedPaymentAccount] = useState<PaymentAccount>();
+
+  const addPaymentDrawerLevel = useMemo(() => {
+    return addClientDrawerOpen || addPaymentAccountDrawerOpen ? 1 : 0;
+  }, [addClientDrawerOpen, addPaymentAccountDrawerOpen]);
 
   if (loading) {
     return (
@@ -47,26 +57,29 @@ export default function PaymentsPage() {
         open={addPaymentDrawerOpen}
         title="Add Payment"
         onOpenChange={setAddPaymentDrawerOpen}
-        level={addClientDrawer ? 1 : 0}
+        level={addPaymentDrawerLevel}
       >
         <PageDetailsDrawer.Content>
           <AddPaymentForm
             recentClients={recentClientsPage?.data}
+            recentPaymentAccounts={recentPaymentAccountsPage?.data}
             filteredClients={undefined}
-            onAddClient={() => setAddClientDrawer(true)}
+            onAddClient={() => setAddClientDrawerOpen(true)}
+            onAddPaymentAccount={() => setAddPaymentAccountDrawerOpen(true)}
             selectedClient={selectedClient}
+            selectedPaymentAccount={selectedPaymentAccount}
           />
         </PageDetailsDrawer.Content>
         <PageDetailsDrawer.Footer>
           <div className="flex justify-end">
-            <Button form="add-payment-form" type="button">
+            <Button form="add-payment-form" type="submit">
               Save Payment
             </Button>
           </div>
         </PageDetailsDrawer.Footer>
       </PageDetailsDrawer>
 
-      <PageDetailsDrawer open={addClientDrawer} title="Add Client" onOpenChange={setAddClientDrawer} level={0}>
+      <PageDetailsDrawer open={addClientDrawerOpen} title="Add Client" onOpenChange={setAddClientDrawerOpen} level={0}>
         <PageDetailsDrawer.Content>
           <div>Add client drawer</div>
         </PageDetailsDrawer.Content>
@@ -77,10 +90,34 @@ export default function PaymentsPage() {
               type="button"
               onClick={() => {
                 setSelectedClient(recentClientsPage?.data[0]);
-                setAddClientDrawer(false);
+                setAddClientDrawerOpen(false);
               }}
             >
               Save Client
+            </Button>
+          </div>
+        </PageDetailsDrawer.Footer>
+      </PageDetailsDrawer>
+
+      <PageDetailsDrawer
+        open={addPaymentAccountDrawerOpen}
+        title="Add Payment Account"
+        onOpenChange={setAddPaymentAccountDrawerOpen}
+        level={0}
+      >
+        <PageDetailsDrawer.Content>
+          <AddPaymentAccountForm
+            onSuccess={(pa) => {
+              setSelectedPaymentAccount(pa);
+              setAddPaymentAccountDrawerOpen(false);
+              refreshPaymentAccounts();
+            }}
+          />
+        </PageDetailsDrawer.Content>
+        <PageDetailsDrawer.Footer>
+          <div className="flex justify-end">
+            <Button form="add-payment-account-form" type="submit">
+              Save Payment Account
             </Button>
           </div>
         </PageDetailsDrawer.Footer>

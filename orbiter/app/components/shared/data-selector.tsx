@@ -82,7 +82,7 @@ export default function DataSelector<T = any>({
     <div id={id} className="relative flex flex-col gap-1">
       <Popover open={showList} onOpenChange={setShowList} modal>
         <PopoverTrigger asChild>
-          <Button variant="ghost" className="h-auto w-full justify-between border border-surface-border-500">
+          <Button variant="ghost" className="h-auto w-full justify-between border border-surface-border-500 text-xs">
             {selectedEntry ? (
               selectedItemComponent ? (
                 React.cloneElement(selectedItemComponent as React.ReactElement<any>, {
@@ -129,25 +129,29 @@ export default function DataSelector<T = any>({
                     )}
 
                     {entries.label && <div className="text-sm font-bold">{entries.label}</div>}
-                    {entries.data?.map((entry: any) =>
-                      itemComponent ? (
-                        <Button
-                          key={dataId ? entry[dataId] : undefined}
-                          variant="ghost"
-                          className={clsx(
-                            'h-auto w-full justify-start rounded-sm px-2 py-1 hover:bg-primary-400 hover:text-background',
-                            {
-                              'text-primary-400 bg-primary-300/20': isItemSelected(entry),
-                            }
-                          )}
-                          onClick={() => handleItemClick(entry)}
-                        >
-                          {React.cloneElement(itemComponent as React.ReactElement<any>, {
-                            item: entry,
-                          })}
-                        </Button>
-                      ) : null
-                    )}
+                    <div className="overflow-auto">
+                      <div className="flex flex-col items-stretch gap-1">
+                        {entries.data?.map((entry: any) =>
+                          itemComponent ? (
+                            <Button
+                              key={dataId ? entry[dataId] : undefined}
+                              variant="ghost"
+                              className={clsx(
+                                'h-auto w-full justify-start rounded-sm px-2 py-1 hover:bg-primary-400 hover:text-background',
+                                {
+                                  'bg-primary-300/20 text-primary-400': isItemSelected(entry),
+                                }
+                              )}
+                              onClick={() => handleItemClick(entry)}
+                            >
+                              {React.cloneElement(itemComponent as React.ReactElement<any>, {
+                                item: entry,
+                              })}
+                            </Button>
+                          ) : null
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

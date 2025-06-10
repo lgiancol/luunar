@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { Payment } from '~/services/payments/payment.model';
 import { getPayments } from '~/services/payments/payments.service';
 import type { PaginatedPayloadDTO, PaginatedResponse } from '~/shared/pagination';
@@ -9,6 +9,10 @@ export function usePaginatedPayments({ page = 1, pageSize = 20 }: PaginatedPaylo
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    refresh();
+  }, [page, pageSize]);
+
+  const refresh = useCallback(() => {
     setLoading(true);
     getPayments({ page, pageSize }).then((paymentsResult) => {
       if (isResultError(paymentsResult)) {
@@ -22,5 +26,5 @@ export function usePaginatedPayments({ page = 1, pageSize = 20 }: PaginatedPaylo
     });
   }, [page, pageSize]);
 
-  return { paymentsPage, loading };
+  return { paymentsPage, loading, refresh };
 }

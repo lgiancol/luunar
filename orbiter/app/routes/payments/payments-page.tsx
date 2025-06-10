@@ -13,7 +13,7 @@ import type { PaymentAccount } from '~/services/payments/payment-account.model';
 
 export default function PaymentsPage() {
   useRedirectIfUnauthenticated();
-  const { paymentsPage, loading } = usePaginatedPayments({ page: 1, pageSize: 5 });
+  const { paymentsPage, loading, refresh: refreshPayments } = usePaginatedPayments({ page: 1, pageSize: 5 });
   const [addPaymentDrawerOpen, setAddPaymentDrawerOpen] = useState<boolean>(true);
   const [addClientDrawerOpen, setAddClientDrawerOpen] = useState<boolean>(false);
   const [addPaymentAccountDrawerOpen, setAddPaymentAccountDrawerOpen] = useState<boolean>(false);
@@ -68,6 +68,10 @@ export default function PaymentsPage() {
             onAddPaymentAccount={() => setAddPaymentAccountDrawerOpen(true)}
             selectedClient={selectedClient}
             selectedPaymentAccount={selectedPaymentAccount}
+            onSuccess={() => {
+              setAddPaymentDrawerOpen(false);
+              refreshPayments();
+            }}
           />
         </PageDetailsDrawer.Content>
         <PageDetailsDrawer.Footer>

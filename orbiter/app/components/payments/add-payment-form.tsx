@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import type { Client } from '~/services/clients/clients.model';
 import type { PaymentAccount } from '~/services/payments/payment-account.model';
-import { PaymentType } from '~/services/payments/payment.model';
+import { PaymentType, type Payment } from '~/services/payments/payment.model';
 import { addPayment } from '~/services/payments/payments.service';
+import { isResultError } from '~/types/result';
 import ClientSelector from '../shared/client-selector';
 import PaymentAccountSelector from '../shared/payment-account-selector';
 import PaymentTypeSelector from '../shared/payment-type-selector';
@@ -18,6 +19,7 @@ interface AddPaymentFormProps {
   selectedPaymentAccount?: PaymentAccount;
   onAddClient?: () => void;
   onAddPaymentAccount?: () => void;
+  onSuccess?: (payment: Payment) => void;
 }
 export default function AddPaymentForm({
   recentClients,
@@ -29,6 +31,7 @@ export default function AddPaymentForm({
 
   onAddClient,
   onAddPaymentAccount,
+  onSuccess,
 }: AddPaymentFormProps) {
   const [type, setType] = useState<PaymentType>(PaymentType.incoming);
   const [receivedAt, setReceivedAt] = useState<Date>(new Date());
@@ -49,17 +52,20 @@ export default function AddPaymentForm({
 
     if (!client) return;
 
-    try {
-      const result = await addPayment({
-        type,
-        received_at: receivedAt,
-        amount,
-        client_id: client.id,
-        payment_account_id: paymentAccount?.id ?? 'test-payment-account-id',
-      });
-    } catch (err) {
-      console.error('addPayment failed:', err);
+    const result = await addPayment({
+      type,
+      received_at: receivedAt,
+      amount,
+      client_id: client.id,
+      payment_account_id: paymentAccount?.id ?? 'test-payment-account-id',
+    });
+
+    if (isResultError(result)) {
+      console.log(result.error);
+      return;
     }
+
+    onSuccess?.(result.data);
   };
 
   return (
@@ -92,7 +98,7 @@ export default function AddPaymentForm({
                   Payment Account
                 </label>
                 <PaymentAccountSelector
-                  selectedPaymentAccount={selectedPaymentAccount}
+                  selectedPaymentAccount={paymentAccount}
                   paymentAccounts={recentPaymentAccounts}
                   onSelect={(pA) => setPaymentAccount(pA)}
                   onAddPaymentAccount={onAddPaymentAccount}

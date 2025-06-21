@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { PlusIcon } from 'lucide-react';
 import { type ColumnDef } from '@tanstack/react-table';
+import { Link } from 'react-router';
 import { Button } from '~/components/ui/button';
 import { DataTable } from '~/components/ui/data-table';
 import PageDetailsDrawer from '~/components/shared/page-details-drawer';
@@ -67,9 +68,9 @@ const columns: ColumnDef<Vendor>[] = [
     header: 'Name',
     cell: ({ row }) => (
       <div className="h-full w-full">
-        <div className="flex h-full w-full items-center p-3">
+        <Link to={`/vendors/${row.getValue<string>('id')}`} className="flex h-full w-full items-center p-3">
           {row.getValue<string>('name')}
-        </div>
+        </Link>
       </div>
     ),
   },
@@ -78,9 +79,9 @@ const columns: ColumnDef<Vendor>[] = [
     header: 'Email',
     cell: ({ row }) => (
       <div className="h-full w-full">
-        <div className="flex h-full w-full items-center p-3">
+        <Link to={`/vendors/${row.getValue<string>('id')}`} className="flex h-full w-full items-center p-3">
           {row.getValue<string>('email') || '-'}
-        </div>
+        </Link>
       </div>
     ),
   },
@@ -89,9 +90,9 @@ const columns: ColumnDef<Vendor>[] = [
     header: 'Phone',
     cell: ({ row }) => (
       <div className="h-full w-full">
-        <div className="flex h-full w-full items-center p-3">
+        <Link to={`/vendors/${row.getValue<string>('id')}`} className="flex h-full w-full items-center p-3">
           {row.getValue<string>('phone') || '-'}
-        </div>
+        </Link>
       </div>
     ),
   },
@@ -107,9 +108,9 @@ const columns: ColumnDef<Vendor>[] = [
 
       return (
         <div className="h-full w-full">
-          <div className="flex h-full w-full items-center p-3">
+          <Link to={`/vendors/${row.getValue<string>('id')}`} className="flex h-full w-full items-center p-3">
             {formatted}
-          </div>
+          </Link>
         </div>
       );
     },

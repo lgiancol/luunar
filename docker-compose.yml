@@ -1,0 +1,69 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: luunar-db
+    environment:
+      POSTGRES_DB: luunar
+      POSTGRES_USER: luunar_admin
+      POSTGRES_PASSWORD: luunar_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./nebula/prisma/migrations:/docker-entrypoint-initdb.d
+    ports:
+      - "5433:5432"
+    networks:
+      - luunar-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U luunar_admin -d luunar"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # Backend API (Nebula)
+  nebula:
+    build:
+      context: ./nebula
+      dockerfile: Dockerfile
+    container_name: luunar-nebula
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://luunar_admin:luunar_password@postgres:5432/luunar
+      PORT: 3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - luunar-network
+    volumes:
+      - ./nebula:/app
+      - /app/node_modules
+    restart: unless-stopped
+
+  # Frontend React App (Orbiter)
+  orbiter:
+    build:
+      context: ./orbiter
+      dockerfile: Dockerfile
+    container_name: luunar-orbiter
+    environment:
+      NODE_ENV: production
+      VITE_API_URL: http://localhost:3000
+      PORT: 5173
+    ports:
+      - "5173:5173"
+    depends_on:
+      - nebula
+    networks:
+      - luunar-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  luunar-network:
+    driver: bridge

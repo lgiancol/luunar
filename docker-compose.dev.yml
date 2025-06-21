@@ -1,0 +1,48 @@
+services:
+  nebula:
+    build:
+      context: ./nebula
+      dockerfile: Dockerfile.dev
+    container_name: luunar-nebula-dev
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://luunar_admin:luunar_password@host.docker.internal:5432/luunar
+      PORT: 3000
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./nebula:/app
+      - /app/node_modules
+      - /app/src/generated
+    networks:
+      - luunar-network-dev
+    command: npm run dev
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  orbiter:
+    build:
+      context: ./orbiter
+      dockerfile: Dockerfile.dev
+    container_name: luunar-orbiter-dev
+    environment:
+      NODE_ENV: development
+      VITE_API_URL: http://localhost:3000
+      PORT: 5173
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./orbiter:/app
+      - /app/node_modules
+    depends_on:
+      - nebula
+    networks:
+      - luunar-network-dev
+    command: npm run dev
+
+volumes:
+  postgres_data_dev:
+
+networks:
+  luunar-network-dev:
+    driver: bridge 

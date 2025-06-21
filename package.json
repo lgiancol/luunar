@@ -8,7 +8,14 @@
   ],
   "scripts": {
     "dev:orbiter": "npm run dev --workspace @mono/orbiter",
-    "dev:nebula": "npm run dev --workspace @mono/nebula"
+    "dev:nebula": "npm run dev --workspace @mono/nebula",
+    "docker:build": "docker-compose up --build",
+    "docker:dev": "docker-compose -f docker-compose.dev.yml up --build",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:clean": "docker-compose down -v --remove-orphans",
+    "docker:db:migrate": "docker-compose exec nebula npx prisma migrate deploy",
+    "docker:db:generate": "docker-compose exec nebula npx prisma generate"
   },
   "keywords": [],
   "author": "",

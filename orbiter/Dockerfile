@@ -44,8 +44,8 @@ RUN chown -R nodejs:nodejs /app
 
 USER nodejs
 
-EXPOSE 3001
+EXPOSE 5173
 
-ENV PORT=3001
+ENV PORT=5173
 
 CMD ["npm", "start"]

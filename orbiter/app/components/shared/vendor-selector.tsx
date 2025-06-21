@@ -1,5 +1,3 @@
-import { useState } from 'react';
-import { useRecentVendors } from '~/hooks/vendors/useRecentVendors';
 import type { Vendor } from '~/services/vendors/vendors.model';
 import DataSelector from './data-selector';
 
@@ -7,24 +5,19 @@ interface VendorSelectorProps {
   selectedVendor?: Vendor;
   recentVendors?: Vendor[];
   onSelect?: (vendor?: Vendor) => void;
-  placeholder?: string;
   className?: string;
   onAddVendor?: () => void;
+  loading?: boolean;
 }
 
 export function VendorSelector({ 
   selectedVendor,
   recentVendors,
   onSelect,
-  placeholder = 'Select vendor...', 
   className = '',
-  onAddVendor
+  onAddVendor,
+  loading = false
 }: VendorSelectorProps) {
-  const { vendors, loading } = useRecentVendors(50);
-  
-  // Use provided vendors or fall back to hook data
-  const vendorsData = recentVendors || vendors?.data;
-
   const handleVendorSelect = (vendor?: Vendor) => {
     onSelect?.(vendor);
   };
@@ -38,7 +31,7 @@ export function VendorSelector({
       dataType="vendor"
       dataId="id"
       selectedEntry={selectedVendor}
-      recentList={vendorsData}
+      recentList={recentVendors}
       onSelect={handleVendorSelect}
       onAddItem={onAddVendor}
       showAdd={!!onAddVendor}

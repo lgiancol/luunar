@@ -22,14 +22,10 @@ export default function ExpensesPage() {
   const [addVendorDrawerOpen, setAddVendorDrawerOpen] = useState<boolean>(false);
   const { paymentAccountsPage: recentPaymentAccountsPage, refresh: refreshPaymentAccounts } =
     useRecentPaymentAccounts(15);
-  const { vendors: recentVendorsPage, refetch: refreshVendors } = useRecentVendors(50);
+  const { vendors: recentVendorsPage, refetch: refreshVendors, loading: vendorsLoading } = useRecentVendors(50);
   const [selectedPaymentAccount, setSelectedPaymentAccount] = useState<PaymentAccount>();
   const [selectedVendor, setSelectedVendor] = useState<Vendor>();
   const [selectedPayments, setSelectedPayments] = useState<Payment[]>([]);
-
-  useEffect(() => {
-    console.log(selectedPayments);
-  }, [selectedPayments]);
 
   const addExpenseDrawerLevel = useMemo(() => {
     if (addPaymentAccountDrawerOpen) return 1;
@@ -76,6 +72,8 @@ export default function ExpensesPage() {
             recentPaymentAccounts={recentPaymentAccountsPage?.data}
             selectedPaymentAccount={selectedPaymentAccount}
             selectedVendor={selectedVendor}
+            recentVendors={recentVendorsPage?.data}
+            vendorsLoading={vendorsLoading}
             onAddPaymentAccount={() => setAddPaymentAccountDrawerOpen(true)}
             onAddVendor={() => setAddVendorDrawerOpen(true)}
             onSuccess={() => {

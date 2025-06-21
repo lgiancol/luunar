@@ -14,6 +14,8 @@ interface AddExpenseFormProps {
   recentPaymentAccounts?: PaymentAccount[];
   selectedPaymentAccount?: PaymentAccount;
   selectedVendor?: Vendor;
+  recentVendors?: Vendor[];
+  vendorsLoading?: boolean;
   onAddPaymentAccount?: () => void;
   onAddVendor?: () => void;
   onSuccess?: (payment: Payment) => void;
@@ -23,6 +25,8 @@ export default function AddExpenseForm({
   recentPaymentAccounts,
   selectedPaymentAccount,
   selectedVendor,
+  recentVendors,
+  vendorsLoading,
   onAddPaymentAccount,
   onAddVendor,
   onSuccess,
@@ -41,7 +45,6 @@ export default function AddExpenseForm({
 
   useEffect(() => {
     setVendor(selectedVendor);
-    console.log(selectedVendor);
   }, [selectedVendor]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -105,9 +108,9 @@ export default function AddExpenseForm({
                 <label className="text-surface-text-500 mb-1 block text-sm font-medium">Vendor</label>
                 <VendorSelector
                   selectedVendor={vendor}
-                  recentVendors={undefined}
+                  recentVendors={recentVendors}
+                  loading={vendorsLoading}
                   onSelect={setVendor}
-                  placeholder="Select vendor..."
                   onAddVendor={onAddVendor}
                 />
               </div>

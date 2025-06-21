@@ -7,7 +7,6 @@ export default [
     index('./routes/dashboard/dashboard-page.tsx'), //
     route('income', './routes/income/income-page.tsx'),
     route('expenses', './routes/expenses/expenses-page.tsx'),
-    route('expenses/add', './routes/expenses/add/add-expenses-page.tsx'),
     route('clients', './routes/clients/clients-page.tsx'),
     route('clients/add', './routes/clients/add/add-client-page.tsx'),
   ]),

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { cn } from '../../lib/utils';
+import { Button } from '../ui/button';
 
 export interface DateFilterValue {
   startDate?: Date;
@@ -84,31 +85,33 @@ export function DateFilter({ value, onChange, className }: DateFilterProps) {
       {/* Preset Buttons */}
       <div className="flex flex-wrap gap-2">
         {PRESETS.map((preset) => (
-          <button
+          <Button
             key={preset.value}
+            variant="white"
+            size="sm"
             onClick={() => handlePresetChange(preset.value)}
             className={cn(
-              "px-3 py-1 text-sm rounded-md border transition-colors",
               value.preset === preset.value || 
               (!value.preset && preset.value === 'all')
-                ? "bg-blue-500 text-white border-blue-500"
-                : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                : ""
             )}
           >
             {preset.label}
-          </button>
+          </Button>
         ))}
-        <button
+        <Button
+          variant="white"
+          size="sm"
           onClick={() => setIsCustomRange(!isCustomRange)}
           className={cn(
-            "px-3 py-1 text-sm rounded-md border transition-colors",
             isCustomRange
-              ? "bg-blue-500 text-white border-blue-500"
-              : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+              ? "bg-primary text-primary-foreground hover:bg-primary/90"
+              : ""
           )}
         >
           Custom Range
-        </button>
+        </Button>
       </div>
 
       {/* Custom Date Range */}

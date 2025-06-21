@@ -7,4 +7,8 @@ export interface DashboardMetrics {
     month: string;
     profit: number;
   } | null;
+  worstPerformingMonth: {
+    month: string;
+    profit: number;
+  } | null;
 } 

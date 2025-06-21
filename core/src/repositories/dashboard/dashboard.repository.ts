@@ -11,6 +11,10 @@ export interface DashboardMetricsData {
     month: string;
     profit: number;
   } | null;
+  worstPerformingMonth: {
+    month: string;
+    profit: number;
+  } | null;
 }
 
 export async function getDashboardMetricsAggregated(dateFilter?: DateFilter): Promise<Result<DashboardMetricsData>> {
@@ -39,7 +43,7 @@ export async function getDashboardMetricsAggregated(dateFilter?: DateFilter): Pr
     const netProfit = totalIncome - totalExpenses;
     const cashFlow = totalIncome - totalExpenses;
 
-    // Get monthly breakdown for best performing month calculation
+    // Get monthly breakdown for best and worst performing month calculation
     let monthlyBreakdown: Array<{
       month: string;
       year: number;
@@ -49,6 +53,7 @@ export async function getDashboardMetricsAggregated(dateFilter?: DateFilter): Pr
     }> = [];
 
     if (dateFilter?.startDate && dateFilter?.endDate) {
+      // Generate all months in the date range and include payment data
       monthlyBreakdown = await prisma.$queryRaw<Array<{
         month: string;
         year: number;
@@ -56,19 +61,32 @@ export async function getDashboardMetricsAggregated(dateFilter?: DateFilter): Pr
         expenses: number;
         profit: number;
       }>>`
-        SELECT 
-          TO_CHAR(received_at, 'Month') as month,
-          EXTRACT(YEAR FROM received_at) as year,
-          SUM(CASE WHEN type = 'incoming' THEN amount ELSE 0 END) as income,
-          SUM(CASE WHEN type = 'outgoing' THEN amount ELSE 0 END) as expenses,
-          SUM(CASE WHEN type = 'incoming' THEN amount ELSE -amount END) as profit
-        FROM payments
-        WHERE received_at >= ${dateFilter.startDate} AND received_at <= ${dateFilter.endDate}
-        GROUP BY TO_CHAR(received_at, 'Month'), EXTRACT(YEAR FROM received_at)
+        WITH RECURSIVE months AS (
+          SELECT 
+            DATE_TRUNC('month', ${dateFilter.startDate}) as month_start
+          UNION ALL
+          SELECT 
+            month_start + INTERVAL '1 month'
+          FROM months 
+          WHERE month_start < DATE_TRUNC('month', ${dateFilter.endDate})
+        ),
+        monthly_data AS (
+          SELECT 
+            TO_CHAR(months.month_start, 'Month') as month,
+            EXTRACT(YEAR FROM months.month_start) as year,
+            COALESCE(SUM(CASE WHEN p.type = 'incoming' THEN p.amount ELSE 0 END), 0) as income,
+            COALESCE(SUM(CASE WHEN p.type = 'outgoing' THEN p.amount ELSE 0 END), 0) as expenses,
+            COALESCE(SUM(CASE WHEN p.type = 'incoming' THEN p.amount ELSE -p.amount END), 0) as profit
+          FROM months
+          LEFT JOIN payments p ON 
+            DATE_TRUNC('month', p.received_at) = months.month_start
+          GROUP BY months.month_start
+        )
+        SELECT * FROM monthly_data
         ORDER BY profit DESC
-        LIMIT 1
       `;
     } else {
+      // For all time, just get months with actual data
       monthlyBreakdown = await prisma.$queryRaw<Array<{
         month: string;
         year: number;
@@ -85,13 +103,17 @@ export async function getDashboardMetricsAggregated(dateFilter?: DateFilter): Pr
         FROM payments
         GROUP BY TO_CHAR(received_at, 'Month'), EXTRACT(YEAR FROM received_at)
         ORDER BY profit DESC
-        LIMIT 1
       `;
     }
 
     const bestPerformingMonth = monthlyBreakdown.length > 0 ? {
       month: monthlyBreakdown[0].month.trim(),
       profit: Number(monthlyBreakdown[0].profit)
+    } : null;
+
+    const worstPerformingMonth = monthlyBreakdown.length > 0 ? {
+      month: monthlyBreakdown[monthlyBreakdown.length - 1].month.trim(),
+      profit: Number(monthlyBreakdown[monthlyBreakdown.length - 1].profit)
     } : null;
 
     return {
@@ -102,6 +124,7 @@ export async function getDashboardMetricsAggregated(dateFilter?: DateFilter): Pr
         netProfit,
         cashFlow,
         bestPerformingMonth,
+        worstPerformingMonth,
       }
     };
   } catch (e: any) {

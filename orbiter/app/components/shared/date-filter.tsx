@@ -18,8 +18,10 @@ const PRESETS = [
   { label: 'All Time', value: 'all' },
   { label: 'This Month', value: 'this_month' },
   { label: 'Last Month', value: 'last_month' },
+  { label: 'Month to Date', value: 'month_to_date' },
   { label: 'This Year', value: 'this_year' },
   { label: 'Last Year', value: 'last_year' },
+  { label: 'Year to Date', value: 'year_to_date' },
 ];
 
 export function DateFilter({ value, onChange, className }: DateFilterProps) {
@@ -52,6 +54,10 @@ export function DateFilter({ value, onChange, className }: DateFilterProps) {
         startDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
         endDate = new Date(now.getFullYear(), now.getMonth(), 0);
         break;
+      case 'month_to_date':
+        startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        endDate = now; // Today
+        break;
       case 'this_year':
         startDate = new Date(now.getFullYear(), 0, 1);
         endDate = new Date(now.getFullYear(), 11, 31);
@@ -59,6 +65,10 @@ export function DateFilter({ value, onChange, className }: DateFilterProps) {
       case 'last_year':
         startDate = new Date(now.getFullYear() - 1, 0, 1);
         endDate = new Date(now.getFullYear() - 1, 11, 31);
+        break;
+      case 'year_to_date':
+        startDate = new Date(now.getFullYear(), 0, 1);
+        endDate = now; // Today
         break;
     }
 

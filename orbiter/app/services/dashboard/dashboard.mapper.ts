@@ -8,5 +8,6 @@ export function mapDashboardMetricsDtoToModel(dto: DashboardMetricsDto): Dashboa
     netProfit: dto.net_profit,
     cashFlow: dto.cash_flow,
     bestPerformingMonth: dto.best_performing_month,
+    worstPerformingMonth: dto.worst_performing_month,
   };
 }

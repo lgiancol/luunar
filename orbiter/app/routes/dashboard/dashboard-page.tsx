@@ -37,6 +37,12 @@ export default function DashboardPage() {
     return `${metrics.bestPerformingMonth.month} - $${metrics.bestPerformingMonth.profit.toLocaleString()}`;
   }, [metrics?.bestPerformingMonth]);
 
+  // Format worst performing month display
+  const worstPerformingMonthDisplay = useMemo(() => {
+    if (!metrics?.worstPerformingMonth) return "No data";
+    return `${metrics.worstPerformingMonth.month} - $${metrics.worstPerformingMonth.profit.toLocaleString()}`;
+  }, [metrics?.worstPerformingMonth]);
+
   if (loading) {
     return (
       <div className="p-6">
@@ -45,6 +51,10 @@ export default function DashboardPage() {
           <DateFilter value={dateFilter} onChange={setDateFilter} />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm animate-pulse">
+            <div className="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
+            <div className="h-8 bg-gray-200 rounded w-3/4"></div>
+          </div>
           <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm animate-pulse">
             <div className="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
             <div className="h-8 bg-gray-200 rounded w-3/4"></div>
@@ -117,6 +127,11 @@ export default function DashboardPage() {
           title="Best Performing Month"
           value={bestPerformingMonthDisplay}
           subtitle="Highest profit month"
+        />
+        <MetricCard
+          title="Worst Performing Month"
+          value={worstPerformingMonthDisplay}
+          subtitle="Lowest profit month"
         />
       </div>
     </div>

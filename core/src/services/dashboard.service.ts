@@ -11,6 +11,10 @@ export interface DashboardMetrics {
     month: string;
     profit: number;
   } | null;
+  worstPerformingMonth: {
+    month: string;
+    profit: number;
+  } | null;
 }
 
 export interface DashboardFilters {
@@ -46,6 +50,7 @@ export async function getDashboardMetrics(filters?: DashboardFilters): Promise<R
         netProfit: result.data.netProfit,
         cashFlow: result.data.cashFlow,
         bestPerformingMonth: result.data.bestPerformingMonth,
+        worstPerformingMonth: result.data.worstPerformingMonth,
       }
     };
   } catch (error: any) {

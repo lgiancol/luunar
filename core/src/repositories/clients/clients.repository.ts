@@ -24,29 +24,39 @@ export async function fetchClientsPaginated({
   const skip = (page - 1) * pageSize;
 
   try {
-    const [clients, total] = await prisma.$transaction([
+    const [clients, total, incomeTotals] = await prisma.$transaction([
       prisma.client.findMany({
         skip,
         take: pageSize,
         orderBy: { name: 'asc' },
-        include: {
-          payments: {
-            where: {
-              type: 'incoming',
-            },
-            select: {
-              amount: true,
-            },
-          },
-        },
       }),
       prisma.client.count(),
+      prisma.payment.groupBy({
+        by: ['client_id'],
+        where: {
+          type: 'incoming',
+          client_id: {
+            not: null,
+          },
+        },
+        orderBy: {
+          client_id: 'asc',
+        },
+        _sum: {
+          amount: true,
+        },
+      }),
     ]);
 
-    // Calculate income for each client
-    const clientsWithIncome = clients.map(client => ({
+    // Create a map of client_id to income total
+    const incomeMap = new Map(
+      incomeTotals.map((item) => [item.client_id, item._sum?.amount || 0])
+    );
+
+    // Add income to each client
+    const clientsWithIncome = clients.map((client) => ({
       ...client,
-      income: client.payments.reduce((sum, payment) => sum + payment.amount, 0),
+      income: incomeMap.get(client.id) || 0,
     }));
 
     const paginationData = {

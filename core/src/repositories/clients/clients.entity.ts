@@ -2,7 +2,9 @@ import { Client } from '../../generated/prisma';
 import { ClientUncheckedCreateInput } from '../../generated/prisma/models';
 import { ClientModel, CreateClientModel } from '../../services/clients/clients.model';
 
-export interface ClientEntity extends Client {}
+export interface ClientEntity extends Client {
+  income?: number;
+}
 
 export function mapCreateClientDataToEntity(model: CreateClientModel): ClientUncheckedCreateInput {
   return {
@@ -24,5 +26,6 @@ export function mapClientEntityToModel(entity: ClientEntity): ClientModel {
     phone: entity.phone,
     notes: entity.notes,
     organizationId: entity.organization_id,
+    income: entity.income || 0,
   };
 }

@@ -29,12 +29,28 @@ export async function fetchClientsPaginated({
         skip,
         take: pageSize,
         orderBy: { name: 'asc' },
+        include: {
+          payments: {
+            where: {
+              type: 'incoming',
+            },
+            select: {
+              amount: true,
+            },
+          },
+        },
       }),
       prisma.client.count(),
     ]);
 
+    // Calculate income for each client
+    const clientsWithIncome = clients.map(client => ({
+      ...client,
+      income: client.payments.reduce((sum, payment) => sum + payment.amount, 0),
+    }));
+
     const paginationData = {
-      data: clients,
+      data: clientsWithIncome,
       meta: {
         page,
         pageSize,

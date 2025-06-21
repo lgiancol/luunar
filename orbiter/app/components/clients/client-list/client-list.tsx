@@ -65,8 +65,7 @@ const columns: ColumnDef<Client>[] = [
     },
     accessorKey: 'income',
     cell: ({ row }) => {
-      //   const amount = parseFloat(row.getValue('amount'));
-      const amount = 1000;
+      const amount = row.getValue<number>('income') || 0;
       const formatted = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'CAD',
@@ -82,8 +81,7 @@ const columns: ColumnDef<Client>[] = [
     },
     footer: ({ table }) => {
       const amount = table.getRowModel().rows.reduce((total, row) => {
-        // return total + row.getValue<Client>()
-        return total + 1000;
+        return total + (row.getValue<number>('income') || 0);
       }, 0);
       const formatted = new Intl.NumberFormat('en-US', {
         style: 'currency',

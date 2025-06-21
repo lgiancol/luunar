@@ -11,5 +11,6 @@ export function mapGetClientResponseDTO(dto: GetClientResponseDTO): Client {
     phone: dto.phone,
     notes: dto.notes,
     organizationId: dto.organization_id,
+    income: dto.income,
   };
 }

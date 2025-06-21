@@ -7,4 +7,5 @@ export interface Client {
   phone: string | null;
   notes: string | null;
   organizationId: string;
+  income: number;
 }

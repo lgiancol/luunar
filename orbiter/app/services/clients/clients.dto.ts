@@ -14,6 +14,7 @@ export interface AddClientResponseDTO {
   phone: string | null;
   notes: string | null;
   organization_id: string;
+  income: number;
 }
 
 export interface GetClientResponseDTO {
@@ -25,4 +26,5 @@ export interface GetClientResponseDTO {
   phone: string | null;
   notes: string | null;
   organization_id: string;
+  income: number;
 }

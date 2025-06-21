@@ -7,5 +7,6 @@ export function mapDashboardMetricsDtoToModel(dto: DashboardMetricsDto): Dashboa
     totalExpenses: dto.total_expenses,
     netProfit: dto.net_profit,
     cashFlow: dto.cash_flow,
+    bestPerformingMonth: dto.best_performing_month,
   };
 }

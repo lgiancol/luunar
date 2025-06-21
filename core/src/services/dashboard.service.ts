@@ -7,6 +7,10 @@ export interface DashboardMetrics {
   totalExpenses: number;
   netProfit: number;
   cashFlow: number;
+  bestPerformingMonth: {
+    month: string;
+    profit: number;
+  } | null;
 }
 
 export interface DashboardFilters {
@@ -41,6 +45,7 @@ export async function getDashboardMetrics(filters?: DashboardFilters): Promise<R
         totalExpenses: result.data.totalExpenses,
         netProfit: result.data.netProfit,
         cashFlow: result.data.cashFlow,
+        bestPerformingMonth: result.data.bestPerformingMonth,
       }
     };
   } catch (error: any) {

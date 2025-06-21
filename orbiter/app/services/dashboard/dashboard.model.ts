@@ -3,4 +3,8 @@ export interface DashboardMetrics {
   totalExpenses: number;
   netProfit: number;
   cashFlow: number;
+  bestPerformingMonth: {
+    month: string;
+    profit: number;
+  } | null;
 } 

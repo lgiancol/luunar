@@ -1,5 +1,5 @@
-import { getPaymentsByType, DateFilter } from '../repositories/payments/payments.repository';
-import { PaymentType } from './payments/payments.model';
+import { DateFilter } from '../repositories/payments/payments.repository';
+import { getDashboardMetricsAggregated } from '../repositories/dashboard/dashboard.repository';
 import { Result } from '../types/result';
 
 export interface DashboardMetrics {
@@ -14,7 +14,7 @@ export interface DashboardFilters {
 
 export async function getDashboardMetrics(filters?: DashboardFilters): Promise<Result<DashboardMetrics>> {
   try {
-    // Build date filter for Prisma
+    // Build date filter for repository
     const dateFilter: DateFilter = {};
     if (filters?.startDate || filters?.endDate) {
       if (filters.startDate) {
@@ -25,39 +25,18 @@ export async function getDashboardMetrics(filters?: DashboardFilters): Promise<R
       }
     }
 
-    // Get all incoming payments to calculate total income
-    const incomingPaymentsResult = await getPaymentsByType({ 
-      type: PaymentType.incoming,
-      page: 1,
-      pageSize: 10000, // Get all payments for calculation
-      dateFilter
-    });
-    if (!incomingPaymentsResult.success) {
-      return incomingPaymentsResult;
+    // Get metrics from repository
+    const result = await getDashboardMetricsAggregated(dateFilter);
+    
+    if (!result.success) {
+      return result;
     }
-    // Get all outgoing payments to calculate total expenses
-    const outgoingPaymentsResult = await getPaymentsByType({ 
-      type: PaymentType.outgoing,
-      page: 1,
-      pageSize: 10000, // Get all payments for calculation
-      dateFilter
-    });
-    if (!outgoingPaymentsResult.success) {
-      return outgoingPaymentsResult;
-    }
-    // Calculate total income by summing all incoming payment amounts
-    const totalIncome = incomingPaymentsResult.data.data.reduce((sum: number, payment) => {
-      return sum + Number(payment.amount);
-    }, 0);
-    // Calculate total expenses by summing all outgoing payment amounts
-    const totalExpenses = outgoingPaymentsResult.data.data.reduce((sum: number, payment) => {
-      return sum + Number(payment.amount);
-    }, 0);
+
     return {
       success: true,
       data: {
-        totalIncome,
-        totalExpenses
+        totalIncome: result.data.totalIncome,
+        totalExpenses: result.data.totalExpenses,
       }
     };
   } catch (error: any) {
@@ -66,4 +45,4 @@ export async function getDashboardMetrics(filters?: DashboardFilters): Promise<R
       error: error.message ?? 'Failed to get dashboard metrics'
     };
   }
-} 
+}

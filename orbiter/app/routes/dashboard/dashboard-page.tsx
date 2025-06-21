@@ -1,20 +1,34 @@
+import { useState, useMemo } from 'react';
 import { useRedirectIfUnauthenticated } from '~/hooks/useRedirectIfUnauthenticated';
 import { useDashboardMetrics } from '~/hooks/useDashboardMetrics';
 import { MetricCard } from '~/components/shared/metric-card';
+import { DateFilter, type DateFilterValue } from '~/components/shared/date-filter';
 
 // interface DashboardPageProps {}
 export default function DashboardPage() {
   useRedirectIfUnauthenticated();
-  const { metrics, loading, error } = useDashboardMetrics();
+  
+  const [dateFilter, setDateFilter] = useState<DateFilterValue>({ preset: 'all' });
+  
+  // Memoize the filters object to prevent unnecessary re-renders
+  const filters = useMemo(() => ({
+    startDate: dateFilter.startDate,
+    endDate: dateFilter.endDate
+  }), [dateFilter.startDate, dateFilter.endDate]);
+  
+  const { metrics, loading, error } = useDashboardMetrics(filters);
 
   if (loading) {
     return (
       <div className="p-6">
-        <h1 className="mb-6 text-2xl font-bold text-gray-900">Dashboard</h1>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-          <div className="animate-pulse rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-            <div className="mb-2 h-4 w-1/2 rounded bg-gray-200"></div>
-            <div className="h-8 w-3/4 rounded bg-gray-200"></div>
+        <h1 className="text-2xl font-bold text-gray-900 mb-6">Dashboard</h1>
+        <div className="mb-6">
+          <DateFilter value={dateFilter} onChange={setDateFilter} />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm animate-pulse">
+            <div className="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
+            <div className="h-8 bg-gray-200 rounded w-3/4"></div>
           </div>
         </div>
       </div>
@@ -24,8 +38,11 @@ export default function DashboardPage() {
   if (error) {
     return (
       <div className="p-6">
-        <h1 className="mb-6 text-2xl font-bold text-gray-900">Dashboard</h1>
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4">
+        <h1 className="text-2xl font-bold text-gray-900 mb-6">Dashboard</h1>
+        <div className="mb-6">
+          <DateFilter value={dateFilter} onChange={setDateFilter} />
+        </div>
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
           <p className="text-red-800">Error loading dashboard metrics: {error}</p>
         </div>
       </div>
@@ -34,10 +51,18 @@ export default function DashboardPage() {
 
   return (
     <div className="p-6">
-      <h1 className="mb-6 text-2xl font-bold text-gray-900">Dashboard</h1>
-
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <MetricCard title="Total Income" value={metrics?.totalIncome || 0} subtitle="All time incoming payments" />
+      <h1 className="text-2xl font-bold text-gray-900 mb-6">Dashboard</h1>
+      
+      <div className="mb-6">
+        <DateFilter value={dateFilter} onChange={setDateFilter} />
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <MetricCard
+          title="Total Income"
+          value={metrics?.totalIncome || 0}
+          subtitle="Incoming payments"
+        />
       </div>
     </div>
   );

@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { getDashboardMetrics } from '../services/dashboard/dashboard.service';
+import { getDashboardMetrics, type DashboardFilters } from '../services/dashboard/dashboard.service';
 import type { DashboardMetrics } from '../services/dashboard/dashboard.model';
 import type { Result } from '../types/result';
 
-export function useDashboardMetrics() {
+export function useDashboardMetrics(filters?: DashboardFilters) {
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -14,7 +14,7 @@ export function useDashboardMetrics() {
         setLoading(true);
         setError(null);
         
-        const result = await getDashboardMetrics();
+        const result = await getDashboardMetrics(filters);
         
         if (result.success) {
           setMetrics(result.data);
@@ -29,7 +29,7 @@ export function useDashboardMetrics() {
     }
 
     fetchMetrics();
-  }, []);
+  }, [filters]);
 
   return { metrics, loading, error };
 } 

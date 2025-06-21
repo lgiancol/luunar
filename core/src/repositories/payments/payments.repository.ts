@@ -4,6 +4,11 @@ import { Result, resultError, resultSuccess } from '../../types/result';
 import { mapPaginatedEntities, PaginatedPayload, PaginatedResultData } from '../../utils/pagination.utils';
 import { mapCreatePaymentModelToEntity, mapPaymentEntityToModel, PaymentEntity } from './payment.entity';
 
+export interface DateFilter {
+  startDate?: Date;
+  endDate?: Date;
+}
+
 export async function createPayment(data: CreatePaymentModel): Promise<Result<Payment>> {
   try {
     const entity = await prisma.payment.create({
@@ -26,11 +31,23 @@ export async function getPaymentsPaginated({
   page,
   pageSize,
   type,
-}: PaginatedPayload & { type?: PaymentType }): Promise<Result<PaginatedResultData<Payment>>> {
+  dateFilter,
+}: PaginatedPayload & { type?: PaymentType; dateFilter?: DateFilter }): Promise<Result<PaginatedResultData<Payment>>> {
   const skip = (page - 1) * pageSize;
 
   try {
-    const whereClause = type ? { type } : {};
+    const whereClause: any = type ? { type } : {};
+    
+    // Add date filters if provided
+    if (dateFilter?.startDate || dateFilter?.endDate) {
+      whereClause.received_at = {};
+      if (dateFilter.startDate) {
+        whereClause.received_at.gte = dateFilter.startDate;
+      }
+      if (dateFilter.endDate) {
+        whereClause.received_at.lte = dateFilter.endDate;
+      }
+    }
 
     const [payments, total] = await prisma.$transaction([
       prisma.payment.findMany({
@@ -68,6 +85,7 @@ export async function getPaymentsByType({
   page,
   pageSize,
   type,
-}: PaginatedPayload & { type: PaymentType }): Promise<Result<PaginatedResultData<Payment>>> {
-  return getPaymentsPaginated({ page, pageSize, type });
+  dateFilter,
+}: PaginatedPayload & { type: PaymentType; dateFilter?: DateFilter }): Promise<Result<PaginatedResultData<Payment>>> {
+  return getPaymentsPaginated({ page, pageSize, type, dateFilter });
 }

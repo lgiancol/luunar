@@ -1,4 +1,4 @@
-import { getPaymentsByType } from '../repositories/payments/payments.repository';
+import { getPaymentsByType, DateFilter } from '../repositories/payments/payments.repository';
 import { PaymentType } from './payments/payments.model';
 import { Result } from '../types/result';
 
@@ -6,13 +6,30 @@ export interface DashboardMetrics {
   totalIncome: number;
 }
 
-export async function getDashboardMetrics(): Promise<Result<DashboardMetrics>> {
+export interface DashboardFilters {
+  startDate?: Date;
+  endDate?: Date;
+}
+
+export async function getDashboardMetrics(filters?: DashboardFilters): Promise<Result<DashboardMetrics>> {
   try {
+    // Build date filter for Prisma
+    const dateFilter: DateFilter = {};
+    if (filters?.startDate || filters?.endDate) {
+      if (filters.startDate) {
+        dateFilter.startDate = filters.startDate;
+      }
+      if (filters.endDate) {
+        dateFilter.endDate = filters.endDate;
+      }
+    }
+
     // Get all incoming payments to calculate total income
     const incomingPaymentsResult = await getPaymentsByType({ 
       type: PaymentType.incoming,
       page: 1,
-      pageSize: 10000 // Get all payments for calculation
+      pageSize: 10000, // Get all payments for calculation
+      dateFilter
     });
 
     if (!incomingPaymentsResult.success) {

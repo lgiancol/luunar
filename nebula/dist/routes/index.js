@@ -1,0 +1,24 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const auth_routes_1 = __importDefault(require("./auth.routes"));
+const clients_routes_1 = __importDefault(require("./clients/clients.routes"));
+const dashboard_routes_1 = __importDefault(require("./dashboard.routes"));
+const health_routes_1 = __importDefault(require("./health.routes"));
+const payment_accounts_routes_1 = __importDefault(require("./payment-accounts/payment-accounts.routes"));
+const payments_routes_1 = __importDefault(require("./payments/payments.routes"));
+const users_routes_1 = __importDefault(require("./users.routes"));
+const vendors_routes_1 = __importDefault(require("./vendors/vendors.routes"));
+const router = (0, express_1.Router)();
+router.use('/health', health_routes_1.default);
+router.use('/auth', auth_routes_1.default);
+router.use('/users', users_routes_1.default);
+router.use('/clients', clients_routes_1.default);
+router.use('/vendors', vendors_routes_1.default);
+router.use('/payments', payments_routes_1.default);
+router.use('/payment_accounts', payment_accounts_routes_1.default);
+router.use('/dashboard', dashboard_routes_1.default);
+exports.default = router;

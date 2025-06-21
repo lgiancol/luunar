@@ -34,14 +34,11 @@ RUN apk upgrade --no-cache && \
     addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nodejs
 
-# Copy the built application
+# Copy the built application and necessary files
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/src/generated ./src/generated
-
-# Copy the entire generated Prisma client directory with all binaries
-COPY --from=builder /app/src/generated/prisma ./src/generated/prisma
 
 # Remove dev dependencies for production
 RUN npm prune --production

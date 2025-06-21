@@ -102,7 +102,7 @@ export function DateFilter({ value, onChange, className }: DateFilterProps) {
             onClick={() => handlePresetChange(preset.value)}
             className={cn(
               value.preset === preset.value || 
-              (!value.preset && preset.value === 'all')
+              (!value.preset && preset.value === 'all' && !isCustomRange)
                 ? "bg-primary text-primary-foreground hover:bg-primary/90"
                 : ""
             )}
@@ -113,7 +113,10 @@ export function DateFilter({ value, onChange, className }: DateFilterProps) {
         <Button
           variant="white"
           size="sm"
-          onClick={() => setIsCustomRange(!isCustomRange)}
+          onClick={() => {
+            setIsCustomRange(true);
+            onChange({ ...value, preset: undefined });
+          }}
           className={cn(
             isCustomRange
               ? "bg-primary text-primary-foreground hover:bg-primary/90"

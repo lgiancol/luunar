@@ -6,7 +6,6 @@ export default [
   layout('./layouts/app-layout.tsx', [
     index('./routes/dashboard/dashboard-page.tsx'), //
     route('income', './routes/income/income-page.tsx'),
-    route('income/add', './routes/income/add/add-income-page.tsx'),
     route('expenses', './routes/expenses/expenses-page.tsx'),
     route('expenses/add', './routes/expenses/add/add-expenses-page.tsx'),
     route('clients', './routes/clients/clients-page.tsx'),

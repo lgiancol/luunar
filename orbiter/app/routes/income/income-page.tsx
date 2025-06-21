@@ -1,6 +1,6 @@
 import { PlusIcon } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
-import AddPaymentForm from '~/components/payments/add-payment-form';
+import AddIncomeForm from '~/components/payments/add-income-form';
 import PageDetailsDrawer from '~/components/shared/page-details-drawer';
 import AddPaymentAccountForm from '~/components/shared/payment-accounts/add-payment-account-form';
 import PaymentsList from '~/components/shared/payments/payments-list';
@@ -70,7 +70,7 @@ export default function IncomePage() {
         level={addPaymentDrawerLevel}
       >
         <PageDetailsDrawer.Content>
-          <AddPaymentForm
+          <AddIncomeForm
             recentClients={recentClientsPage?.data}
             recentPaymentAccounts={recentPaymentAccountsPage?.data}
             filteredClients={undefined}
@@ -86,7 +86,7 @@ export default function IncomePage() {
         </PageDetailsDrawer.Content>
         <PageDetailsDrawer.Footer>
           <div className="flex justify-end">
-            <Button form="add-payment-form" type="submit">
+            <Button form="add-income-form" type="submit">
               Save Income
             </Button>
           </div>
@@ -100,7 +100,7 @@ export default function IncomePage() {
         <PageDetailsDrawer.Footer>
           <div className="flex justify-end">
             <Button
-              form="add-payment-form"
+              form="add-income-form"
               type="button"
               onClick={() => {
                 setSelectedClient(recentClientsPage?.data[0]);

@@ -9,7 +9,6 @@ services:
       POSTGRES_PASSWORD: luunar_password
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./nebula/prisma/migrations:/docker-entrypoint-initdb.d
     ports:
       - "5433:5432"
     networks:

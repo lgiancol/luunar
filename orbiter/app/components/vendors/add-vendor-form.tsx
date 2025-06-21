@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Button } from '~/components/ui/button';
 import InputText from '~/components/ui/input-text';
 import InputTextarea from '~/components/ui/input-textarea';
 import { addVendor } from '~/services/vendors/vendors.service';
@@ -54,7 +53,7 @@ export function AddVendorForm({ onSuccess, onCancel }: AddVendorFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form id="add-vendor-form" onSubmit={handleSubmit} className="space-y-4">
       {error && (
         <div className="text-red-500 text-sm">{error}</div>
       )}
@@ -107,17 +106,6 @@ export function AddVendorForm({ onSuccess, onCancel }: AddVendorFormProps) {
           onChange={(e) => handleInputChange('notes', e.target.value)}
           rows={3}
         />
-      </div>
-
-      <div className="flex gap-2 pt-4">
-        <Button type="submit" disabled={loading}>
-          {loading ? 'Adding...' : 'Add Vendor'}
-        </Button>
-        {onCancel && (
-          <Button type="button" variant="secondary" onClick={onCancel}>
-            Cancel
-          </Button>
-        )}
       </div>
     </form>
   );

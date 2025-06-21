@@ -54,9 +54,15 @@ export function VendorList() {
         <PageDetailsDrawer.Content>
           <AddVendorForm
             onSuccess={handleAddSuccess}
-            onCancel={() => setIsAddDrawerOpen(false)}
           />
         </PageDetailsDrawer.Content>
+        <PageDetailsDrawer.Footer>
+          <div className="flex justify-end">
+            <Button form="add-vendor-form" type="submit">
+              Save Vendor
+            </Button>
+          </div>
+        </PageDetailsDrawer.Footer>
       </PageDetailsDrawer>
     </div>
   );

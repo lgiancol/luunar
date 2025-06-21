@@ -93,24 +93,4 @@ const columns: ColumnDef<Vendor>[] = [
       </div>
     ),
   },
-  {
-    accessorKey: 'createdAt',
-    header: 'Created',
-    cell: ({ row }) => (
-      <div className="h-full w-full">
-        <div className="flex h-full w-full items-center p-3">
-          {(() => {
-            const createdAt = row.getValue('createdAt');
-            if (createdAt instanceof Date) {
-              return createdAt.toLocaleDateString();
-            }
-            if (typeof createdAt === 'string') {
-              return new Date(createdAt).toLocaleDateString();
-            }
-            return '-';
-          })()}
-        </div>
-      </div>
-    ),
-  },
 ]; 

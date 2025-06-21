@@ -4,6 +4,7 @@ import { Result } from '../types/result';
 
 export interface DashboardMetrics {
   totalIncome: number;
+  totalExpenses: number;
 }
 
 export interface DashboardFilters {
@@ -31,20 +32,32 @@ export async function getDashboardMetrics(filters?: DashboardFilters): Promise<R
       pageSize: 10000, // Get all payments for calculation
       dateFilter
     });
-
     if (!incomingPaymentsResult.success) {
       return incomingPaymentsResult;
     }
-
+    // Get all outgoing payments to calculate total expenses
+    const outgoingPaymentsResult = await getPaymentsByType({ 
+      type: PaymentType.outgoing,
+      page: 1,
+      pageSize: 10000, // Get all payments for calculation
+      dateFilter
+    });
+    if (!outgoingPaymentsResult.success) {
+      return outgoingPaymentsResult;
+    }
     // Calculate total income by summing all incoming payment amounts
     const totalIncome = incomingPaymentsResult.data.data.reduce((sum: number, payment) => {
       return sum + Number(payment.amount);
     }, 0);
-
+    // Calculate total expenses by summing all outgoing payment amounts
+    const totalExpenses = outgoingPaymentsResult.data.data.reduce((sum: number, payment) => {
+      return sum + Number(payment.amount);
+    }, 0);
     return {
       success: true,
       data: {
-        totalIncome
+        totalIncome,
+        totalExpenses
       }
     };
   } catch (error: any) {

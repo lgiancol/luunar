@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { PlusIcon } from 'lucide-react';
 import { type ColumnDef } from '@tanstack/react-table';
 import { Button } from '~/components/ui/button';
 import { DataTable } from '~/components/ui/data-table';
@@ -32,7 +33,8 @@ export function VendorList() {
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-900">Vendors</h1>
-        <Button onClick={() => setIsAddDrawerOpen(true)}>
+        <Button variant="white" onClick={() => setIsAddDrawerOpen(true)}>
+          <PlusIcon />
           Add Vendor
         </Button>
       </div>

@@ -95,4 +95,38 @@ const columns: ColumnDef<Vendor>[] = [
       </div>
     ),
   },
+  {
+    accessorKey: 'income',
+    header: 'Income',
+    cell: ({ row }) => {
+      const amount = row.getValue<number>('income') || 0;
+      const formatted = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'CAD',
+      }).format(amount);
+
+      return (
+        <div className="h-full w-full">
+          <div className="flex h-full w-full items-center p-3">
+            {formatted}
+          </div>
+        </div>
+      );
+    },
+    footer: ({ table }) => {
+      const amount = table.getRowModel().rows.reduce((total, row) => {
+        return total + (row.getValue<number>('income') || 0);
+      }, 0);
+      const formatted = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'CAD',
+      }).format(amount);
+
+      return (
+        <div className="flex h-full w-full items-center">
+          <p className="font-bold">{formatted}</p>
+        </div>
+      );
+    },
+  },
 ]; 

@@ -24,17 +24,43 @@ export async function getVendorsPaginated({
   const skip = (page - 1) * pageSize;
 
   try {
-    const [vendors, total] = await prisma.$transaction([
+    const [vendors, total, incomeTotals] = await prisma.$transaction([
       prisma.vendor.findMany({
         skip,
         take: pageSize,
         orderBy: { created_at: 'desc' },
       }),
       prisma.vendor.count(),
+      prisma.payment.groupBy({
+        by: ['vendor_id'],
+        where: {
+          type: 'incoming',
+          vendor_id: {
+            not: null,
+          },
+        },
+        orderBy: {
+          vendor_id: 'asc',
+        },
+        _sum: {
+          amount: true,
+        },
+      }),
     ]);
 
+    // Create a map of vendor_id to income total
+    const incomeMap = new Map(
+      incomeTotals.map((item) => [item.vendor_id, item._sum?.amount || 0])
+    );
+
+    // Add income to each vendor
+    const vendorsWithIncome = vendors.map((vendor) => ({
+      ...vendor,
+      income: incomeMap.get(vendor.id) || 0,
+    }));
+
     const paginationData = {
-      data: vendors,
+      data: vendorsWithIncome,
       meta: {
         page,
         pageSize,

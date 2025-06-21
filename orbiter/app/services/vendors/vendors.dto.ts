@@ -20,6 +20,7 @@ export interface VendorDto {
   phone: string | null;
   notes: string | null;
   organization_id: string;
+  income: number;
 }
 
 export interface PaginatedVendorsDto {

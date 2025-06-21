@@ -9,6 +9,7 @@ export const mapVendorDtoToModel = (dto: VendorDto): Vendor => ({
   phone: dto.phone,
   notes: dto.notes,
   organizationId: dto.organization_id,
+  income: dto.income,
 });
 
 export const mapCreateVendorModelToDto = (model: CreateVendorModel): CreateVendorDto => ({

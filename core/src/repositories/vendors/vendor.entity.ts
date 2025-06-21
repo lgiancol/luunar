@@ -8,6 +8,7 @@ export interface VendorEntity {
   phone: string | null;
   notes: string | null;
   organization_id: string;
+  income?: number;
 }
 
 export function mapVendorEntityToModel(entity: VendorEntity): VendorModel {
@@ -19,6 +20,7 @@ export function mapVendorEntityToModel(entity: VendorEntity): VendorModel {
     phone: entity.phone,
     notes: entity.notes,
     organizationId: entity.organization_id,
+    income: entity.income || 0,
   };
 }
 

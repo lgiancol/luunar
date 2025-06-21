@@ -6,6 +6,7 @@ export interface Vendor {
   phone: string | null;
   notes: string | null;
   organizationId: string;
+  income: number;
 }
 
 export type CreateVendorModel = Omit<Vendor, 'id' | 'createdAt'>; 

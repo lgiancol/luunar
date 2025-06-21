@@ -1,30 +1,32 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRecentVendors } from '~/hooks/vendors/useRecentVendors';
 import type { Vendor } from '~/services/vendors/vendors.model';
+import DataSelector from './data-selector';
 
 interface VendorSelectorProps {
-  value?: string;
-  onChange: (vendorId: string) => void;
+  selectedVendor?: Vendor;
+  recentVendors?: Vendor[];
+  onSelect?: (vendor?: Vendor) => void;
   placeholder?: string;
   className?: string;
+  onAddVendor?: () => void;
 }
 
-export function VendorSelector({ value, onChange, placeholder = 'Select vendor...', className = '' }: VendorSelectorProps) {
+export function VendorSelector({ 
+  selectedVendor,
+  recentVendors,
+  onSelect,
+  placeholder = 'Select vendor...', 
+  className = '',
+  onAddVendor
+}: VendorSelectorProps) {
   const { vendors, loading } = useRecentVendors(50);
-  const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null);
+  
+  // Use provided vendors or fall back to hook data
+  const vendorsData = recentVendors || vendors?.data;
 
-  useEffect(() => {
-    if (value && vendors?.data) {
-      const vendor = vendors.data.find(v => v.id === value);
-      setSelectedVendor(vendor || null);
-    } else {
-      setSelectedVendor(null);
-    }
-  }, [value, vendors]);
-
-  const handleVendorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const vendorId = e.target.value;
-    onChange(vendorId);
+  const handleVendorSelect = (vendor?: Vendor) => {
+    onSelect?.(vendor);
   };
 
   if (loading) {
@@ -32,17 +34,19 @@ export function VendorSelector({ value, onChange, placeholder = 'Select vendor..
   }
 
   return (
-    <select
-      value={value || ''}
-      onChange={handleVendorChange}
-      className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${className}`}
+    <DataSelector
+      dataType="vendor"
+      dataId="id"
+      selectedEntry={selectedVendor}
+      recentList={vendorsData}
+      onSelect={handleVendorSelect}
+      onAddItem={onAddVendor}
+      showAdd={!!onAddVendor}
     >
-      <option value="">{placeholder}</option>
-      {vendors?.data.map((vendor) => (
-        <option key={vendor.id} value={vendor.id}>
-          {vendor.name}
-        </option>
-      ))}
-    </select>
+      <DataSelector.SelectedItem>
+        {(vendor: Vendor) => <div>{vendor.name}</div>}
+      </DataSelector.SelectedItem>
+      <DataSelector.Item>{(vendor: Vendor) => <div>{vendor.name}</div>}</DataSelector.Item>
+    </DataSelector>
   );
 } 

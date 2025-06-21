@@ -4,9 +4,10 @@ import InputText from '~/components/ui/input-text';
 import InputTextarea from '~/components/ui/input-textarea';
 import { addVendor } from '~/services/vendors/vendors.service';
 import type { CreateVendorDto } from '~/services/vendors/vendors.dto';
+import type { Vendor } from '~/services/vendors/vendors.model';
 
 interface AddVendorFormProps {
-  onSuccess?: () => void;
+  onSuccess?: (vendor: Vendor) => void;
   onCancel?: () => void;
 }
 
@@ -35,7 +36,7 @@ export function AddVendorForm({ onSuccess, onCancel }: AddVendorFormProps) {
       const result = await addVendor(formData);
       
       if (result.success) {
-        onSuccess?.();
+        onSuccess?.(result.data);
         setFormData({ name: '', email: '', phone: '', notes: '' });
       } else {
         setError(result.error);

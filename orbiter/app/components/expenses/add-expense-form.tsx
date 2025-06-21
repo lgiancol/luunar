@@ -8,23 +8,28 @@ import { VendorSelector } from '../shared/vendor-selector';
 import InputNumber from '../ui/input-number';
 import InputText from '../ui/input-text';
 import InputTextarea from '../ui/input-textarea';
+import type { Vendor } from '~/services/vendors/vendors.model';
 
 interface AddExpenseFormProps {
   recentPaymentAccounts?: PaymentAccount[];
   selectedPaymentAccount?: PaymentAccount;
+  selectedVendor?: Vendor;
   onAddPaymentAccount?: () => void;
+  onAddVendor?: () => void;
   onSuccess?: (payment: Payment) => void;
 }
 
 export default function AddExpenseForm({
   recentPaymentAccounts,
   selectedPaymentAccount,
+  selectedVendor,
   onAddPaymentAccount,
+  onAddVendor,
   onSuccess,
 }: AddExpenseFormProps) {
   const [paidAt, setPaidAt] = useState<Date>(new Date());
   const [amount, setAmount] = useState<number>(0);
-  const [vendorId, setVendorId] = useState<string>('');
+  const [vendor, setVendor] = useState<Vendor | undefined>(selectedVendor);
   const [paymentAccount, setPaymentAccount] = useState<PaymentAccount | undefined>(selectedPaymentAccount);
   const [invoiceReference, setInvoiceReference] = useState<string>('');
   const [description, setDescription] = useState<string>('');
@@ -34,17 +39,22 @@ export default function AddExpenseForm({
     setPaymentAccount(selectedPaymentAccount);
   }, [selectedPaymentAccount]);
 
+  useEffect(() => {
+    setVendor(selectedVendor);
+    console.log(selectedVendor);
+  }, [selectedVendor]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!vendorId) return;
+    if (!vendor) return;
 
     const result = await addPayment({
       type: PaymentType.outgoing, // Always outgoing for expenses
       received_at: paidAt,
       amount,
       client_id: undefined, // No client for expenses
-      vendor_id: vendorId, // Use vendor ID instead of text
+      vendor_id: vendor.id, // Use vendor ID instead of text
       payment_account_id: paymentAccount?.id ?? 'test-payment-account-id',
     });
 
@@ -82,9 +92,7 @@ export default function AddExpenseForm({
             {/* Payment Method and Vendor Row */}
             <div className="flex gap-2">
               <div className="flex-1">
-                <label className="text-surface-text-500 mb-1 block text-sm font-medium">
-                  Payment Method
-                </label>
+                <label className="text-surface-text-500 mb-1 block text-sm font-medium">Payment Method</label>
                 <PaymentAccountSelector
                   selectedPaymentAccount={paymentAccount}
                   paymentAccounts={recentPaymentAccounts}
@@ -94,13 +102,13 @@ export default function AddExpenseForm({
               </div>
 
               <div className="flex-1">
-                <label className="text-surface-text-500 mb-1 block text-sm font-medium">
-                  Vendor
-                </label>
+                <label className="text-surface-text-500 mb-1 block text-sm font-medium">Vendor</label>
                 <VendorSelector
-                  value={vendorId}
-                  onChange={setVendorId}
+                  selectedVendor={vendor}
+                  recentVendors={undefined}
+                  onSelect={setVendor}
                   placeholder="Select vendor..."
+                  onAddVendor={onAddVendor}
                 />
               </div>
             </div>
@@ -108,9 +116,7 @@ export default function AddExpenseForm({
             {/* Invoice Reference and Category Row */}
             <div className="flex gap-2">
               <div className="flex-1">
-                <label className="text-surface-text-500 mb-1 block text-sm font-medium">
-                  Invoice/Reference
-                </label>
+                <label className="text-surface-text-500 mb-1 block text-sm font-medium">Invoice/Reference</label>
                 <InputText
                   id="invoiceReference"
                   type="text"
@@ -121,14 +127,12 @@ export default function AddExpenseForm({
               </div>
 
               <div className="flex-1">
-                <label className="text-surface-text-500 mb-1 block text-sm font-medium">
-                  Category
-                </label>
+                <label className="text-surface-text-500 mb-1 block text-sm font-medium">Category</label>
                 <select
                   id="category"
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
-                  className="w-full rounded-md border border-surface-border-300 bg-surface-500 px-3 py-2 text-sm text-surface-text-500 focus:border-primary-300 focus:outline-none focus:ring-1 focus:ring-primary-300"
+                  className="text-surface-text-500 w-full rounded-md border border-surface-border-300 bg-surface-500 px-3 py-2 text-sm focus:border-primary-300 focus:ring-1 focus:ring-primary-300 focus:outline-none"
                 >
                   <option value="">Select a category</option>
                   <option value="office-supplies">Office Supplies</option>
@@ -142,9 +146,7 @@ export default function AddExpenseForm({
 
             {/* Description Row */}
             <div className="w-full">
-              <label className="text-surface-text-500 mb-1 block text-sm font-medium">
-                Description
-              </label>
+              <label className="text-surface-text-500 mb-1 block text-sm font-medium">Description</label>
               <InputTextarea
                 id="description"
                 defaultValue={description}

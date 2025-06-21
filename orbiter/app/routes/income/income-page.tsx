@@ -1,5 +1,5 @@
 import { PlusIcon } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import AddPaymentForm from '~/components/payments/add-payment-form';
 import PageDetailsDrawer from '~/components/shared/page-details-drawer';
 import AddPaymentAccountForm from '~/components/shared/payment-accounts/add-payment-account-form';
@@ -11,6 +11,7 @@ import { usePaginatedPayments } from '~/hooks/payments/userPaginatedPayments';
 import { useRedirectIfUnauthenticated } from '~/hooks/useRedirectIfUnauthenticated';
 import type { Client } from '~/services/clients/clients.model';
 import type { PaymentAccount } from '~/services/payments/payment-account.model';
+import type { Payment } from '~/services/payments/payment.model';
 
 export default function PaymentsPage() {
   useRedirectIfUnauthenticated();
@@ -23,6 +24,12 @@ export default function PaymentsPage() {
     useRecentPaymentAccounts(15);
   const [selectedClient, setSelectedClient] = useState<Client>();
   const [selectedPaymentAccount, setSelectedPaymentAccount] = useState<PaymentAccount>();
+
+  const [selectedPayments, setSelectedPayments] = useState<Payment[]>([]);
+
+  useEffect(() => {
+    console.log(selectedPayments);
+  }, [selectedPayments]);
 
   const addPaymentDrawerLevel = useMemo(() => {
     return addClientDrawerOpen || addPaymentAccountDrawerOpen ? 1 : 0;
@@ -41,24 +48,24 @@ export default function PaymentsPage() {
       <div className="flex flex-col gap-2">
         <div className="flex justify-between gap-2">
           <div className="text-2xl font-semibold text-background-text-500">
-            <h2 className="text-text-primary-500">Payments</h2>
+            <h2 className="text-text-primary-500">Income</h2>
           </div>
 
           <div>
             <Button variant="white" onClick={() => setAddPaymentDrawerOpen(true)}>
               <PlusIcon />
-              Add Payment
+              Add Income
             </Button>
           </div>
         </div>
         <div>
-          <PaymentsList paymentsPage={paymentsPage} />
+          <PaymentsList paymentsPage={paymentsPage} onPaymentSelectionChange={setSelectedPayments} />
         </div>
       </div>
 
       <PageDetailsDrawer
         open={addPaymentDrawerOpen}
-        title="Add Payment"
+        title="Add Income"
         onOpenChange={setAddPaymentDrawerOpen}
         level={addPaymentDrawerLevel}
       >
@@ -80,7 +87,7 @@ export default function PaymentsPage() {
         <PageDetailsDrawer.Footer>
           <div className="flex justify-end">
             <Button form="add-payment-form" type="submit">
-              Save Payment
+              Save Income
             </Button>
           </div>
         </PageDetailsDrawer.Footer>

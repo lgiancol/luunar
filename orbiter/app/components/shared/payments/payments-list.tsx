@@ -8,9 +8,12 @@ import type { PaginatedResponse } from '~/shared/pagination';
 
 interface IPaymentsListParams {
   paymentsPage: PaginatedResponse<Payment> | undefined;
+  onPaymentSelectionChange?: (selectedPayments: Payment[]) => void;
 }
-export default function PaymentsList({ paymentsPage }: IPaymentsListParams) {
-  return <DataTable columns={columns} data={paymentsPage?.data || []} />;
+export default function PaymentsList({ paymentsPage, onPaymentSelectionChange }: IPaymentsListParams) {
+  return (
+    <DataTable columns={columns} data={paymentsPage?.data || []} onRowSelectionChange={onPaymentSelectionChange} />
+  );
 }
 
 const columns: ColumnDef<Payment>[] = [
@@ -44,7 +47,7 @@ const columns: ColumnDef<Payment>[] = [
     cell: ({ row }) => {
       return (
         <div className="h-full w-full">
-          <Link to={`/payments/${row.getValue<string>('select')}`} className="flex h-full w-full items-center p-3">
+          <Link to={`/income/${row.getValue<string>('select')}`} className="flex h-full w-full items-center p-3">
             {row.getValue<PaymentAccount>('paymentAccount').name}
           </Link>
         </div>
@@ -69,7 +72,7 @@ const columns: ColumnDef<Payment>[] = [
 
       return (
         <div className="h-full w-full">
-          <Link to={`/payments/${row.getValue<string>('select')}`} className="flex h-full w-full items-center p-3">
+          <Link to={`/income/${row.getValue<string>('select')}`} className="flex h-full w-full items-center p-3">
             {formatted}
           </Link>
         </div>
@@ -101,7 +104,7 @@ const columns: ColumnDef<Payment>[] = [
     header: 'Type',
     cell: ({ row }) => (
       <div className="h-full w-full">
-        <Link to={`/payments/${row.getValue<string>('select')}`} className="flex h-full w-full items-center p-3">
+        <Link to={`/income/${row.getValue<string>('select')}`} className="flex h-full w-full items-center p-3">
           {row.getValue<string>('type')}
         </Link>
       </div>
@@ -120,7 +123,7 @@ const columns: ColumnDef<Payment>[] = [
 
       return (
         <div className="h-full w-full">
-          <Link to={`/payments/${row.getValue<string>('select')}`} className="flex h-full w-full items-center p-3">
+          <Link to={`/income/${row.getValue<string>('select')}`} className="flex h-full w-full items-center p-3">
             {formattedDate}
           </Link>
         </div>

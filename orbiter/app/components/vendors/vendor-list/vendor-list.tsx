@@ -98,7 +98,7 @@ const columns: ColumnDef<Vendor>[] = [
   },
   {
     accessorKey: 'income',
-    header: 'Income',
+    header: 'Expenses',
     cell: ({ row }) => {
       const amount = row.getValue<number>('income') || 0;
       const formatted = new Intl.NumberFormat('en-US', {

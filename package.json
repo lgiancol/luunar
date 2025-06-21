@@ -4,11 +4,11 @@
   "description": "",
   "workspaces": [
     "orbiter",
-    "core"
+    "nebula"
   ],
   "scripts": {
     "dev:orbiter": "npm run dev --workspace @mono/orbiter",
-    "dev:core": "npm run dev --workspace @mono/core"
+    "dev:nebula": "npm run dev --workspace @mono/nebula"
   },
   "keywords": [],
   "author": "",

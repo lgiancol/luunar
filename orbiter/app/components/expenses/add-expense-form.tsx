@@ -4,6 +4,7 @@ import { PaymentType, type Payment } from '~/services/payments/payment.model';
 import { addPayment } from '~/services/payments/payments.service';
 import { isResultError } from '~/types/result';
 import PaymentAccountSelector from '../shared/payment-account-selector';
+import { VendorSelector } from '../shared/vendor-selector';
 import InputNumber from '../ui/input-number';
 import InputText from '../ui/input-text';
 import InputTextarea from '../ui/input-textarea';
@@ -23,7 +24,7 @@ export default function AddExpenseForm({
 }: AddExpenseFormProps) {
   const [paidAt, setPaidAt] = useState<Date>(new Date());
   const [amount, setAmount] = useState<number>(0);
-  const [vendor, setVendor] = useState<string>('');
+  const [vendorId, setVendorId] = useState<string>('');
   const [paymentAccount, setPaymentAccount] = useState<PaymentAccount | undefined>(selectedPaymentAccount);
   const [invoiceReference, setInvoiceReference] = useState<string>('');
   const [description, setDescription] = useState<string>('');
@@ -36,13 +37,14 @@ export default function AddExpenseForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!vendor) return;
+    if (!vendorId) return;
 
     const result = await addPayment({
       type: PaymentType.outgoing, // Always outgoing for expenses
       received_at: paidAt,
       amount,
       client_id: undefined, // No client for expenses
+      vendor_id: vendorId, // Use vendor ID instead of text
       payment_account_id: paymentAccount?.id ?? 'test-payment-account-id',
     });
 
@@ -95,13 +97,10 @@ export default function AddExpenseForm({
                 <label className="text-surface-text-500 mb-1 block text-sm font-medium">
                   Vendor
                 </label>
-                <InputText
-                  id="vendor"
-                  type="text"
-                  value={vendor}
-                  onChange={(e) => setVendor(e.target.value)}
-                  placeholder="Who did you pay?"
-                  required
+                <VendorSelector
+                  value={vendorId}
+                  onChange={setVendorId}
+                  placeholder="Select vendor..."
                 />
               </div>
             </div>

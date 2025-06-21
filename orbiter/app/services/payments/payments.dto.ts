@@ -7,6 +7,7 @@ export interface AddPaymentPayloadDTO {
   received_at: Date;
   amount: number;
   client_id?: string;
+  vendor_id?: string;
   invoice_id?: string;
   payment_account_id: string;
 }
@@ -19,9 +20,11 @@ export interface GetPaymentResponseDTO {
   received_at: Date;
   amount: number;
   client_id: string | null;
+  vendor_id: string | null;
   invoice_id: string | null;
   payment_account_id: string;
 
   client: GetClientResponseDTO | null;
+  vendor: GetClientResponseDTO | null;
   payment_account: GetPaymentAccountResponseDTO;
 }

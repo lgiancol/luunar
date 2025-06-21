@@ -11,8 +11,14 @@ export const addVendor = async (req: Request, res: Response) => {
   }
 
   const createVendorModel = req.body as CreateVendorModel;
+  
+  // Add default organization ID if not provided
+  const vendorData: CreateVendorModel = {
+    ...createVendorModel,
+    organizationId: createVendorModel.organizationId || 'test-organization',
+  };
 
-  const vendorResult = await vendorService.addVendor(createVendorModel);
+  const vendorResult = await vendorService.addVendor(vendorData);
 
   if (isResultError(vendorResult)) {
     res.status(500).json({ error: vendorResult.error });

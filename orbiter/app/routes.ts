@@ -9,5 +9,6 @@ export default [
     route('expenses', './routes/expenses/expenses-page.tsx'),
     route('clients', './routes/clients/clients-page.tsx'),
     route('clients/add', './routes/clients/add/add-client-page.tsx'),
+    route('vendors', './routes/vendors/vendors-page.tsx'),
   ]),
 ] satisfies RouteConfig;

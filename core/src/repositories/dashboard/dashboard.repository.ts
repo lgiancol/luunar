@@ -38,8 +38,8 @@ export async function getDashboardMetricsAggregated(dateFilter?: DateFilter): Pr
     });
 
     type GroupedResult = { type: string; _sum: { amount: number | null } };
-    const totalIncome = (results.find((result: GroupedResult) => result.type === 'incoming')?._sum.amount) || 0;
-    const totalExpenses = (results.find((result: GroupedResult) => result.type === 'outgoing')?._sum.amount) || 0;
+    const totalIncome = Number(results.find((result: GroupedResult) => result.type === 'incoming')?._sum.amount) || 0;
+    const totalExpenses = Number(results.find((result: GroupedResult) => result.type === 'outgoing')?._sum.amount) || 0;
     const netProfit = totalIncome - totalExpenses;
     const cashFlow = totalIncome - totalExpenses;
 
@@ -47,6 +47,7 @@ export async function getDashboardMetricsAggregated(dateFilter?: DateFilter): Pr
     let monthlyBreakdown: Array<{
       month: string;
       year: number;
+      month_start: Date;
       income: number;
       expenses: number;
       profit: number;
@@ -57,6 +58,7 @@ export async function getDashboardMetricsAggregated(dateFilter?: DateFilter): Pr
       monthlyBreakdown = await prisma.$queryRaw<Array<{
         month: string;
         year: number;
+        month_start: Date;
         income: number;
         expenses: number;
         profit: number;
@@ -69,11 +71,13 @@ export async function getDashboardMetricsAggregated(dateFilter?: DateFilter): Pr
             month_start + INTERVAL '1 month'
           FROM months 
           WHERE month_start < DATE_TRUNC('month', ${dateFilter.endDate})
+            AND month_start < DATE_TRUNC('month', CURRENT_DATE)
         ),
         monthly_data AS (
           SELECT 
             TO_CHAR(months.month_start, 'Month') as month,
             EXTRACT(YEAR FROM months.month_start) as year,
+            months.month_start,
             COALESCE(SUM(CASE WHEN p.type = 'incoming' THEN p.amount ELSE 0 END), 0) as income,
             COALESCE(SUM(CASE WHEN p.type = 'outgoing' THEN p.amount ELSE 0 END), 0) as expenses,
             COALESCE(SUM(CASE WHEN p.type = 'incoming' THEN p.amount ELSE -p.amount END), 0) as profit
@@ -83,13 +87,14 @@ export async function getDashboardMetricsAggregated(dateFilter?: DateFilter): Pr
           GROUP BY months.month_start
         )
         SELECT * FROM monthly_data
-        ORDER BY profit DESC
+        ORDER BY profit DESC, month_start ASC
       `;
     } else {
       // For all time, just get months with actual data
       monthlyBreakdown = await prisma.$queryRaw<Array<{
         month: string;
         year: number;
+        month_start: Date;
         income: number;
         expenses: number;
         profit: number;
@@ -97,12 +102,13 @@ export async function getDashboardMetricsAggregated(dateFilter?: DateFilter): Pr
         SELECT 
           TO_CHAR(received_at, 'Month') as month,
           EXTRACT(YEAR FROM received_at) as year,
+          DATE_TRUNC('month', received_at) as month_start,
           SUM(CASE WHEN type = 'incoming' THEN amount ELSE 0 END) as income,
           SUM(CASE WHEN type = 'outgoing' THEN amount ELSE 0 END) as expenses,
           SUM(CASE WHEN type = 'incoming' THEN amount ELSE -amount END) as profit
         FROM payments
-        GROUP BY TO_CHAR(received_at, 'Month'), EXTRACT(YEAR FROM received_at)
-        ORDER BY profit DESC
+        GROUP BY TO_CHAR(received_at, 'Month'), EXTRACT(YEAR FROM received_at), DATE_TRUNC('month', received_at)
+        ORDER BY profit DESC, month_start ASC
       `;
     }
 
@@ -111,10 +117,28 @@ export async function getDashboardMetricsAggregated(dateFilter?: DateFilter): Pr
       profit: Number(monthlyBreakdown[0].profit)
     } : null;
 
-    const worstPerformingMonth = monthlyBreakdown.length > 0 ? {
-      month: monthlyBreakdown[monthlyBreakdown.length - 1].month.trim(),
-      profit: Number(monthlyBreakdown[monthlyBreakdown.length - 1].profit)
-    } : null;
+    // If all months have the same profit, show the same month for both best and worst
+    const allSameProfit = monthlyBreakdown.length > 0 && 
+      monthlyBreakdown.every(month => Number(month.profit) === Number(monthlyBreakdown[0].profit));
+    
+    let worstPerformingMonth = null;
+    if (monthlyBreakdown.length > 0) {
+      if (allSameProfit) {
+        worstPerformingMonth = {
+          month: monthlyBreakdown[0].month.trim(),
+          profit: Number(monthlyBreakdown[0].profit)
+        };
+      } else {
+        // Find the minimum profit value
+        const minProfit = Math.min(...monthlyBreakdown.map(month => Number(month.profit)));
+        // Find the earliest month with the minimum profit
+        const worstMonth = monthlyBreakdown.find(month => Number(month.profit) === minProfit);
+        worstPerformingMonth = {
+          month: worstMonth!.month.trim(),
+          profit: Number(worstMonth!.profit)
+        };
+      }
+    }
 
     return {
       success: true,

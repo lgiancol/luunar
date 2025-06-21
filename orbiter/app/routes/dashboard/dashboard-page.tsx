@@ -34,6 +34,10 @@ export default function DashboardPage() {
             <div className="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
             <div className="h-8 bg-gray-200 rounded w-3/4"></div>
           </div>
+          <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm animate-pulse">
+            <div className="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
+            <div className="h-8 bg-gray-200 rounded w-3/4"></div>
+          </div>
         </div>
       </div>
     );
@@ -71,6 +75,11 @@ export default function DashboardPage() {
           title="Total Expenses"
           value={metrics?.totalExpenses || 0}
           subtitle="Outgoing payments"
+        />
+        <MetricCard
+          title="Net Profit/Loss"
+          value={metrics?.netProfit || 0}
+          subtitle="Income minus expenses"
         />
       </div>
     </div>

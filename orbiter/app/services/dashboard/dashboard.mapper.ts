@@ -5,5 +5,6 @@ export function mapDashboardMetricsDtoToModel(dto: DashboardMetricsDto): Dashboa
   return {
     totalIncome: dto.total_income,
     totalExpenses: dto.total_expenses,
+    netProfit: dto.net_profit,
   };
 }

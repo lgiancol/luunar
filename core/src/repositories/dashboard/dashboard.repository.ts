@@ -5,6 +5,7 @@ import { Result, resultError, resultSuccess } from '../../types/result';
 export interface DashboardMetricsData {
   totalIncome: number;
   totalExpenses: number;
+  netProfit: number;
 }
 
 export async function getDashboardMetricsAggregated(dateFilter?: DateFilter): Promise<Result<DashboardMetricsData>> {
@@ -29,12 +30,14 @@ export async function getDashboardMetricsAggregated(dateFilter?: DateFilter): Pr
     type GroupedResult = { type: string; _sum: { amount: number | null } };
     const totalIncome = (results.find((result: GroupedResult) => result.type === 'incoming')?._sum.amount) || 0;
     const totalExpenses = (results.find((result: GroupedResult) => result.type === 'outgoing')?._sum.amount) || 0;
+    const netProfit = totalIncome - totalExpenses;
 
     return {
       success: true,
       data: {
         totalIncome,
         totalExpenses,
+        netProfit,
       }
     };
   } catch (e: any) {

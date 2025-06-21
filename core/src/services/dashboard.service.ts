@@ -5,6 +5,7 @@ import { Result } from '../types/result';
 export interface DashboardMetrics {
   totalIncome: number;
   totalExpenses: number;
+  netProfit: number;
 }
 
 export interface DashboardFilters {
@@ -37,6 +38,7 @@ export async function getDashboardMetrics(filters?: DashboardFilters): Promise<R
       data: {
         totalIncome: result.data.totalIncome,
         totalExpenses: result.data.totalExpenses,
+        netProfit: result.data.netProfit,
       }
     };
   } catch (error: any) {

@@ -23,3 +23,23 @@ export async function getPayments({
     mapPaginatedResponseDTO(mapGetPaymentResponseDTO)
   );
 }
+
+export async function getIncomingPayments({
+  page,
+  pageSize,
+}: PaginatedPayloadDTO): Promise<Result<PaginatedResponse<Payment>>> {
+  return apiGet<PaginatedResponseDTO<GetPaymentResponseDTO>, PaginatedResponse<Payment>>(
+    `/payments/incoming?page=${page}&pageSize=${pageSize}`,
+    mapPaginatedResponseDTO(mapGetPaymentResponseDTO)
+  );
+}
+
+export async function getOutgoingPayments({
+  page,
+  pageSize,
+}: PaginatedPayloadDTO): Promise<Result<PaginatedResponse<Payment>>> {
+  return apiGet<PaginatedResponseDTO<GetPaymentResponseDTO>, PaginatedResponse<Payment>>(
+    `/payments/outgoing?page=${page}&pageSize=${pageSize}`,
+    mapPaginatedResponseDTO(mapGetPaymentResponseDTO)
+  );
+}

@@ -7,15 +7,15 @@ import PaymentsList from '~/components/shared/payments/payments-list';
 import { Button } from '~/components/ui/button';
 import { useRecentClients } from '~/hooks/clients/useRecentClients';
 import { useRecentPaymentAccounts } from '~/hooks/payment-accounts/useRecentPaymentAccounts';
-import { usePaginatedPayments } from '~/hooks/payments/userPaginatedPayments';
+import { usePaginatedIncomingPayments } from '~/hooks/payments/userPaginatedPayments';
 import { useRedirectIfUnauthenticated } from '~/hooks/useRedirectIfUnauthenticated';
 import type { Client } from '~/services/clients/clients.model';
 import type { PaymentAccount } from '~/services/payments/payment-account.model';
 import type { Payment } from '~/services/payments/payment.model';
 
-export default function PaymentsPage() {
+export default function IncomePage() {
   useRedirectIfUnauthenticated();
-  const { paymentsPage, loading, refresh: refreshPayments } = usePaginatedPayments({ page: 1, pageSize: 5 });
+  const { paymentsPage, loading, refresh: refreshPayments } = usePaginatedIncomingPayments({ page: 1, pageSize: 5 });
   const [addPaymentDrawerOpen, setAddPaymentDrawerOpen] = useState<boolean>(false);
   const [addClientDrawerOpen, setAddClientDrawerOpen] = useState<boolean>(false);
   const [addPaymentAccountDrawerOpen, setAddPaymentAccountDrawerOpen] = useState<boolean>(false);

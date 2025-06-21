@@ -1,5 +1,5 @@
 import prisma from '../../db/prisma';
-import { CreatePaymentModel, Payment } from '../../services/payments/payments.model';
+import { CreatePaymentModel, Payment, PaymentType } from '../../services/payments/payments.model';
 import { Result, resultError, resultSuccess } from '../../types/result';
 import { mapPaginatedEntities, PaginatedPayload, PaginatedResultData } from '../../utils/pagination.utils';
 import { mapCreatePaymentModelToEntity, mapPaymentEntityToModel, PaymentEntity } from './payment.entity';
@@ -23,12 +23,16 @@ export async function createPayment(data: CreatePaymentModel): Promise<Result<Pa
 export async function getPaymentsPaginated({
   page,
   pageSize,
-}: PaginatedPayload): Promise<Result<PaginatedResultData<Payment>>> {
+  type,
+}: PaginatedPayload & { type?: PaymentType }): Promise<Result<PaginatedResultData<Payment>>> {
   const skip = (page - 1) * pageSize;
 
   try {
+    const whereClause = type ? { type } : {};
+
     const [payments, total] = await prisma.$transaction([
       prisma.payment.findMany({
+        where: whereClause,
         skip,
         take: pageSize,
         include: {
@@ -36,7 +40,7 @@ export async function getPaymentsPaginated({
         },
         orderBy: { received_at: 'desc' },
       }),
-      prisma.payment.count(),
+      prisma.payment.count({ where: whereClause }),
     ]);
 
     const paginationData = {
@@ -54,4 +58,12 @@ export async function getPaymentsPaginated({
     const message = e.message ?? 'Failed to get Payments';
     return resultError(message);
   }
+}
+
+export async function getPaymentsByType({
+  page,
+  pageSize,
+  type,
+}: PaginatedPayload & { type: PaymentType }): Promise<Result<PaginatedResultData<Payment>>> {
+  return getPaymentsPaginated({ page, pageSize, type });
 }

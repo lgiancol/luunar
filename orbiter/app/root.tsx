@@ -5,8 +5,8 @@ import { twMerge } from 'tailwind-merge';
 import type { Route } from './+types/root';
 import { AuthProvider } from './contexts/auth-context';
 
+import clsx from 'clsx';
 import 'primereact/resources/primereact.css';
-import { classNames } from 'primereact/utils';
 import './app.css';
 
 export const links: Route.LinksFunction = () => [
@@ -51,7 +51,7 @@ export default function App() {
         if (twFn) {
           twClassName = twFn(options).className;
         }
-        return { className: classNames('rounded-sm overflow-hidden', twClassName) };
+        return { className: clsx('rounded-sm overflow-hidden', twClassName) };
       },
       thead: (options) => {
         const twFn = Tailwind.datatable?.thead as Function;
@@ -60,7 +60,7 @@ export default function App() {
           const tw = twFn(options);
           twClassName = tw.className;
         }
-        return { className: classNames('bg-primary-100', twClassName) };
+        return { className: clsx('bg-primary-100', twClassName) };
       },
       column: {
         ...Tailwind.datatable?.column,
@@ -72,13 +72,13 @@ export default function App() {
             console.log(tw);
             twClassName = tw.className;
           }
-          return { className: classNames('bg-orange-100', twClassName) };
+          return { className: clsx('bg-orange-100', twClassName) };
         },
       },
     },
     inputtext: {
       root: ({ props, context }: { props: any; context: any }) => ({
-        className: classNames(
+        className: clsx(
           'm-0',
           'font-sans text-gray-600 dark:text-white/80 bg-white dark:bg-gray-900 border border-gray-300 dark:border-blue-900/40 transition-colors duration-200 appearance-none rounded-lg',
           {

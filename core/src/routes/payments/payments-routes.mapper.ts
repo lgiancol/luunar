@@ -7,6 +7,7 @@ export function mapAddPaymentPayload(payload: any): CreatePaymentModel {
     amount: payload['amount'],
     paymentAccountId: payload['payment_account_id'],
     clientId: payload['client_id'],
+    vendorId: payload['vendor_id'],
     invoiceId: payload['invoice_id'],
   };
 }

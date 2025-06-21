@@ -9,7 +9,7 @@
   "scripts": {
     "dev:orbiter": "npm run dev --workspace @mono/orbiter",
     "dev:nebula": "npm run dev --workspace @mono/nebula",
-    "docker:build": "docker-compose up --build",
+    "docker:build": "docker-compose up --build -d",
     "docker:dev": "docker-compose -f docker-compose.dev.yml up --build",
     "docker:down": "docker-compose down",
     "docker:logs": "docker-compose logs -f",

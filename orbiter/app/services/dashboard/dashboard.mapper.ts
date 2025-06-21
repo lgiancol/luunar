@@ -6,5 +6,6 @@ export function mapDashboardMetricsDtoToModel(dto: DashboardMetricsDto): Dashboa
     totalIncome: dto.total_income,
     totalExpenses: dto.total_expenses,
     netProfit: dto.net_profit,
+    cashFlow: dto.cash_flow,
   };
 }

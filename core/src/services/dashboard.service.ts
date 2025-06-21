@@ -6,6 +6,7 @@ export interface DashboardMetrics {
   totalIncome: number;
   totalExpenses: number;
   netProfit: number;
+  cashFlow: number;
 }
 
 export interface DashboardFilters {
@@ -39,6 +40,7 @@ export async function getDashboardMetrics(filters?: DashboardFilters): Promise<R
         totalIncome: result.data.totalIncome,
         totalExpenses: result.data.totalExpenses,
         netProfit: result.data.netProfit,
+        cashFlow: result.data.cashFlow,
       }
     };
   } catch (error: any) {

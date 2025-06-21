@@ -6,6 +6,7 @@ export interface DashboardMetricsData {
   totalIncome: number;
   totalExpenses: number;
   netProfit: number;
+  cashFlow: number;
 }
 
 export async function getDashboardMetricsAggregated(dateFilter?: DateFilter): Promise<Result<DashboardMetricsData>> {
@@ -31,6 +32,7 @@ export async function getDashboardMetricsAggregated(dateFilter?: DateFilter): Pr
     const totalIncome = (results.find((result: GroupedResult) => result.type === 'incoming')?._sum.amount) || 0;
     const totalExpenses = (results.find((result: GroupedResult) => result.type === 'outgoing')?._sum.amount) || 0;
     const netProfit = totalIncome - totalExpenses;
+    const cashFlow = totalIncome - totalExpenses; // Same as net profit in this case
 
     return {
       success: true,
@@ -38,6 +40,7 @@ export async function getDashboardMetricsAggregated(dateFilter?: DateFilter): Pr
         totalIncome,
         totalExpenses,
         netProfit,
+        cashFlow,
       }
     };
   } catch (e: any) {

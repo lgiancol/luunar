@@ -40,6 +40,20 @@ model Client {
     @@map("clients")
 }
 
+model Vendor {
+    id         String   @id @default(cuid())
+    created_at DateTime @default(now())
+
+    name            String
+    email           String?
+    phone           String?
+    notes           String?
+    organization_id String // Will end up being a relation to the Organizations table
+    payments        Payment[]
+
+    @@map("vendors")
+}
+
 model Payment {
     id         String   @id @default(cuid())
     created_at DateTime @default(now())
@@ -48,10 +62,12 @@ model Payment {
     received_at        DateTime
     amount             Int
     client_id          String?
+    vendor_id          String?
     invoice_id         String?
     payment_account_id String
 
     client          Client?        @relation(fields: [client_id], references: [id])
+    vendor          Vendor?        @relation(fields: [vendor_id], references: [id])
     payment_account PaymentAccount @relation(fields: [payment_account_id], references: [id])
 
     @@map("payments")

@@ -2,10 +2,12 @@ import { Payment as PrismaPayment } from '../../generated/prisma';
 import { PaymentUncheckedCreateInput } from '../../generated/prisma/models';
 import { CreatePaymentModel, Payment, PaymentType } from '../../services/payments/payments.model';
 import { ClientEntity, mapClientEntityToModel } from '../clients/clients.entity';
+import { VendorEntity, mapVendorEntityToModel } from '../vendors/vendor.entity';
 import { mapPaymentAccountEntityToModel, PaymentAccountEntity } from './payment-account.entity';
 
 export interface PaymentEntity extends PrismaPayment {
   client?: ClientEntity | null;
+  vendor?: VendorEntity | null;
   payment_account: PaymentAccountEntity;
 }
 
@@ -15,6 +17,7 @@ export function mapCreatePaymentModelToEntity(model: CreatePaymentModel): Paymen
     received_at: model.receivedAt,
     amount: model.amount,
     client_id: model.clientId,
+    vendor_id: model.vendorId,
     payment_account_id: model.paymentAccountId,
     invoice_id: model.invoiceId,
   };
@@ -29,10 +32,12 @@ export function mapPaymentEntityToModel(entity: PaymentEntity): Payment {
     receivedAt: new Date(entity.received_at),
     amount: entity.amount,
     clientId: entity.client_id,
+    vendorId: entity.vendor_id,
     paymentAccountId: entity.payment_account_id,
     invoiceId: entity.invoice_id,
 
     paymentAccount: mapPaymentAccountEntityToModel(entity.payment_account),
     client: entity.client ? mapClientEntityToModel(entity.client) : null,
+    vendor: entity.vendor ? mapVendorEntityToModel(entity.vendor) : null,
   };
 }

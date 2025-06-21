@@ -10,6 +10,8 @@ export async function createPayment(data: CreatePaymentModel): Promise<Result<Pa
       data: mapCreatePaymentModelToEntity(data),
       include: {
         payment_account: true,
+        client: true,
+        vendor: true,
       },
     });
 
@@ -37,6 +39,8 @@ export async function getPaymentsPaginated({
         take: pageSize,
         include: {
           payment_account: true,
+          client: true,
+          vendor: true,
         },
         orderBy: { received_at: 'desc' },
       }),

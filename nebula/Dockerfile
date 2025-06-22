@@ -17,15 +17,7 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Generate Prisma client from the prisma directory
-WORKDIR /app/prisma
-RUN npx prisma generate
-WORKDIR /app
-
-# Verify the generated client exists
-RUN ls -la src/generated/prisma/
-
-# Build the application after Prisma client is generated
+# Build the application (this will also generate Prisma client)
 RUN npm run build
 
 # Production image, copy all the files and run the app

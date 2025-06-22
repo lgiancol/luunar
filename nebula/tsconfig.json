@@ -12,7 +12,11 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "declaration": false,
-    "sourceMap": false
+    "sourceMap": false,
+    "baseUrl": "src",
+    "paths": {
+      "*": ["*"]
+    }
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "__tests__"]

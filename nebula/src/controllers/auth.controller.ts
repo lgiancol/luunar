@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import passport from 'passport';
-import { User } from '../generated/prisma';
+import { User } from 'generated/prisma';
 import { registerUser } from '../services/auth.service';
 import { isResultError } from '../types/result';
 import { ModelToResponseBodyMapper } from '../utils/controller.utils';

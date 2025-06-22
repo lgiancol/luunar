@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "build": "pwd && prisma generate && sleep 1 && echo '=== Checking src/ ===' && ls -la src/ && echo '=== Checking generated/ ===' && ls -la generated/ 2>/dev/null || echo 'generated/ not found' && echo '=== Checking src/generated/ ===' && ls -la src/generated/ 2>/dev/null || echo 'src/generated/ not found' && sleep 2 && tsc",
+    "build": "pwd && prisma generate && sleep 1 && echo '=== Checking src/ ===' && ls -la src/ && echo '=== Checking src/generated/ ===' && ls -la src/generated/ && echo '=== Checking src/generated/prisma/ ===' && ls -la src/generated/prisma/ && sleep 2 && tsc",
     "start": "node dist/index.js",
     "test": "jest",
     "test:watch": "jest --watch",

@@ -1,5 +1,5 @@
-# Use Node.js 20 Alpine for smaller image size
-FROM node:20-alpine AS base
+# Use Node.js LTS Alpine for better compatibility
+FROM node:lts-alpine3.17 AS base
 
 # Install dependencies only when needed
 FROM base AS deps

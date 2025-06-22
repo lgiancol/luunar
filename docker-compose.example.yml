@@ -25,6 +25,8 @@ services:
     build:
       context: ./nebula
       dockerfile: Dockerfile
+      platforms:
+        - linux/amd64
     container_name: luunar-nebula
     environment:
       NODE_ENV: production

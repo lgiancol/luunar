@@ -41,8 +41,16 @@ RUN apk upgrade --no-cache && \
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
-# COPY --from=builder /app/src/generated ./src/generated
+COPY --from=builder /app/src/generated ./src/generated
+COPY --from=builder /app/prisma ./prisma
 
+# Create migration script inline
+RUN echo '#!/bin/sh\n\
+echo "Running Prisma migrations..."\n\
+npx prisma migrate deploy\n\
+echo "Migrations completed. Starting application..."\n\
+exec node dist/index.js' > /app/start.sh && \
+chmod +x /app/start.sh
 
 # Remove dev dependencies for production
 RUN npm prune --production

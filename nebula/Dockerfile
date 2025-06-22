@@ -18,7 +18,10 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Generate Prisma client first
-RUN npx prisma generate
+RUN echo "Generating Prisma client..." && \
+    npx prisma generate && \
+    echo "Prisma client generated successfully" && \
+    ls -la src/generated/prisma/
 
 # Build the application
 RUN npm run build

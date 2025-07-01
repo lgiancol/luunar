@@ -1,63 +1,68 @@
 import { Request, Response } from 'express';
 import { CreateVendorModel } from '../services/vendors/vendors.model';
-import * as vendorService from '../services/vendors/vendors.service';
+import { vendorsService } from '../services/vendors/vendors.service';
 import { isResultError } from '../types/result';
 import { ModelToResponseBodyMapper } from '../utils/controller.utils';
 
-export const addVendor = async (req: Request, res: Response) => {
-  if (!req.isAuthenticated()) {
-    res.status(401).json({ error: 'Unauthorized' });
-    return;
+export class VendorsController {
+  async addVendor(req: Request, res: Response) {
+    if (!req.isAuthenticated()) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    const createVendorModel = req.body as CreateVendorModel;
+
+    // Add default organization ID if not provided
+    const vendorData: CreateVendorModel = {
+      ...createVendorModel,
+      organizationId: createVendorModel.organizationId || 'test-organization',
+    };
+
+    const vendorResult = await vendorsService.addVendor(vendorData);
+
+    if (isResultError(vendorResult)) {
+      res.status(500).json({ error: vendorResult.error });
+      return;
+    }
+
+    res.json(ModelToResponseBodyMapper(vendorResult.data));
   }
 
-  const createVendorModel = req.body as CreateVendorModel;
-  
-  // Add default organization ID if not provided
-  const vendorData: CreateVendorModel = {
-    ...createVendorModel,
-    organizationId: createVendorModel.organizationId || 'test-organization',
-  };
+  async getAllVendors(req: Request, res: Response) {
+    if (!req.isAuthenticated()) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
 
-  const vendorResult = await vendorService.addVendor(vendorData);
+    const { page, pageSize } = req.query as { page: string; pageSize: string };
 
-  if (isResultError(vendorResult)) {
-    res.status(500).json({ error: vendorResult.error });
-    return;
+    const result = await vendorsService.getVendors({ page: parseInt(page), pageSize: parseInt(pageSize) });
+    if (isResultError(result)) {
+      res.status(500).json({ error: result.error });
+      return;
+    }
+
+    res.json(ModelToResponseBodyMapper(result.data));
   }
 
-  res.json(ModelToResponseBodyMapper(vendorResult.data));
-};
+  async getRecentVendors(req: Request, res: Response) {
+    if (!req.isAuthenticated()) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
 
-export const getAllVendors = async (req: Request, res: Response) => {
-  if (!req.isAuthenticated()) {
-    res.status(401).json({ error: 'Unauthorized' });
-    return;
+    const { limit } = req.query as { limit: string };
+
+    const result = await vendorsService.getRecentVendorsService(parseInt(limit));
+    if (isResultError(result)) {
+      res.status(500).json({ error: result.error });
+      return;
+    }
+
+    res.json(ModelToResponseBodyMapper(result.data));
   }
+}
 
-  const { page, pageSize } = req.query as { page: string; pageSize: string };
-
-  const result = await vendorService.getVendors({ page: parseInt(page), pageSize: parseInt(pageSize) });
-  if (isResultError(result)) {
-    res.status(500).json({ error: result.error });
-    return;
-  }
-
-  res.json(ModelToResponseBodyMapper(result.data));
-};
-
-export const getRecentVendors = async (req: Request, res: Response) => {
-  if (!req.isAuthenticated()) {
-    res.status(401).json({ error: 'Unauthorized' });
-    return;
-  }
-
-  const { limit } = req.query as { limit: string };
-
-  const result = await vendorService.getRecentVendorsService(parseInt(limit));
-  if (isResultError(result)) {
-    res.status(500).json({ error: result.error });
-    return;
-  }
-
-  res.json(ModelToResponseBodyMapper(result.data));
-}; 
+// Single instance
+export const vendorsController = new VendorsController();

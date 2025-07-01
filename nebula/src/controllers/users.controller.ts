@@ -1,8 +1,13 @@
 import { Request, Response } from 'express';
-import { listUsers } from '../services/users/users.service';
+import { usersService } from '../services/users/users.service';
 import { ModelToResponseBodyMapper } from '../utils/controller.utils';
 
-export const getAllUsers = async (req: Request, res: Response) => {
-  const users = await listUsers();
-  res.json(ModelToResponseBodyMapper(users));
-};
+export class UsersController {
+  async getAllUsers(req: Request, res: Response) {
+    const users = await usersService.listUsers();
+    res.json(ModelToResponseBodyMapper(users));
+  }
+}
+
+// Single instance
+export const usersController = new UsersController();

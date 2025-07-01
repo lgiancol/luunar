@@ -1,7 +1,18 @@
 import bcrypt from 'bcryptjs';
-import { createUser } from '../repositories/users/users.repository';
+import { UsersRepository } from '../repositories/users/users.repository';
 
-export async function registerUser(firstName: string, lastName: string, email: string, password: string) {
-  const hashed = await bcrypt.hash(password, 10);
-  return createUser({ firstName, lastName, email, password: hashed });
+export class AuthService {
+  private usersRepository: UsersRepository;
+
+  constructor(usersRepository: UsersRepository) {
+    this.usersRepository = usersRepository;
+  }
+
+  async registerUser(firstName: string, lastName: string, email: string, password: string) {
+    const hashed = await bcrypt.hash(password, 10);
+    return this.usersRepository.createUser({ firstName, lastName, email, password: hashed });
+  }
 }
+
+// Single instance
+export const authService = new AuthService(new UsersRepository());

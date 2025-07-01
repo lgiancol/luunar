@@ -51,8 +51,34 @@ model Vendor {
     notes           String?
     organization_id String // Will end up being a relation to the Organizations table
     payments        Payment[]
+    subscriptions   Subscription[]
 
     @@map("vendors")
+}
+
+model Subscription {
+    id         String   @id @default(cuid())
+    created_at DateTime @default(now())
+    updated_at DateTime @updatedAt
+
+    name               String
+    amount             Int
+    vendor_id          String
+    payment_account_id String
+    frequency          String // 'daily', 'weekly', 'monthly', 'yearly'
+    interval           Int // every X days/weeks/months/years
+    start_date         DateTime
+    end_date           DateTime? // null for indefinite
+    is_active          Boolean   @default(true)
+    last_processed     DateTime?
+    description        String?
+    category           String?
+
+    vendor          Vendor         @relation(fields: [vendor_id], references: [id])
+    payment_account PaymentAccount @relation(fields: [payment_account_id], references: [id])
+    payments        Payment[]
+
+    @@map("subscriptions")
 }
 
 model Payment {
@@ -66,10 +92,12 @@ model Payment {
     vendor_id          String?
     invoice_id         String?
     payment_account_id String
+    subscription_id    String? // New field to track subscription payments
 
     client          Client?        @relation(fields: [client_id], references: [id])
     vendor          Vendor?        @relation(fields: [vendor_id], references: [id])
     payment_account PaymentAccount @relation(fields: [payment_account_id], references: [id])
+    subscription    Subscription?  @relation(fields: [subscription_id], references: [id])
 
     @@map("payments")
 }
@@ -82,7 +110,8 @@ model PaymentAccount {
     type  String // optional: "platform", "bank", "card"
     notes String? // optional internal info
 
-    payments Payment[]
+    payments      Payment[]
+    subscriptions Subscription[]
 
     @@map("payment_accounts")
 }

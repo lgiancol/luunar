@@ -1,15 +1,26 @@
-import * as clientsRespository from '../../repositories/clients/clients.repository';
+import { ClientsRepository } from '../../repositories/clients/clients.repository';
 import { PaginatedPayload } from '../../utils/pagination.utils';
 import { CreateClientModel } from './clients.model';
 
-export async function addClient(data: CreateClientModel) {
-  return clientsRespository.createClient(data);
+export class ClientsService {
+  private clientsRepository: ClientsRepository;
+
+  constructor(clientsRepository: ClientsRepository) {
+    this.clientsRepository = clientsRepository;
+  }
+
+  async addClient(data: CreateClientModel) {
+    return this.clientsRepository.createClient(data);
+  }
+
+  async indexClients(data: PaginatedPayload) {
+    return this.clientsRepository.fetchClientsPaginated(data);
+  }
+
+  async fetchRecentClients(limit: number) {
+    return this.clientsRepository.fetchRecentClients(limit);
+  }
 }
 
-export async function indexClients(data: PaginatedPayload) {
-  return clientsRespository.fetchClientsPaginated(data);
-}
-
-export async function fetchRecentClients(limit: number) {
-  return clientsRespository.fetchRecentClients(limit);
-}
+// Single instance
+export const clientsService = new ClientsService(new ClientsRepository());

@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Button } from '~/components/ui/button';
-import InputText from '../ui/input-text';
+import { addSubscription } from '~/services/subscriptions/subscriptions.service';
 import InputNumber from '../ui/input-number';
-import { Checkbox } from '../ui/checkbox';
+import InputText from '../ui/input-text';
+import InputTextarea from '../ui/input-textarea';
 
 interface AddSubscriptionFormProps {
   onSuccess: () => void;
@@ -13,7 +14,9 @@ export function AddSubscriptionForm({ onSuccess }: AddSubscriptionFormProps) {
     name: '',
     amount: 0,
     frequency: '',
-    startDate: '',
+    interval: 1,
+    description: '',
+    startDate: new Date().toISOString().split('T')[0],
     endDate: '',
     isActive: true,
   });
@@ -33,9 +36,24 @@ export function AddSubscriptionForm({ onSuccess }: AddSubscriptionFormProps) {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Add API call
+
+    const result = await addSubscription({
+      name: form.name,
+      amount: form.amount,
+      frequency: form.frequency,
+      interval: form.interval,
+      startDate: new Date(form.startDate),
+      endDate: form.endDate ? new Date(form.endDate) : null,
+      isActive: form.isActive,
+      description: form.description,
+      category: '',
+      vendorId: '',
+      paymentAccountId: '',
+      lastProcessed: null,
+    });
+
     onSuccess();
   };
 
@@ -63,14 +81,25 @@ export function AddSubscriptionForm({ onSuccess }: AddSubscriptionFormProps) {
               />
             </div>
           </div>
-          <div>
-            <label className="mb-1 block text-sm font-medium">Frequency</label>
-            <InputText
-              id="frequency"
-              type="text"
-              value={form.frequency}
-              onChange={(e) => setForm((prev) => ({ ...prev, frequency: e.target.value }))}
-            />
+          <div className="flex gap-2">
+            <div className="flex-1">
+              <label className="mb-1 block text-sm font-medium">Frequency</label>
+              <InputText
+                id="frequency"
+                type="text"
+                value={form.frequency}
+                onChange={(e) => setForm((prev) => ({ ...prev, frequency: e.target.value }))}
+              />
+            </div>
+            <div className="flex-1">
+              <label className="mb-1 block text-sm font-medium">Interval</label>
+              <InputNumber
+                id="interval"
+                type="number"
+                defaultValue={form.interval}
+                onChange={(e) => setForm((prev) => ({ ...prev, interval: e }))}
+              />
+            </div>
           </div>
           <div className="flex gap-2">
             <div className="flex-1">
@@ -92,15 +121,14 @@ export function AddSubscriptionForm({ onSuccess }: AddSubscriptionFormProps) {
               />
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="isActive"
-              checked={form.isActive}
-              onCheckedChange={(checked) => setForm((prev) => ({ ...prev, isActive: !!checked }))}
+          <div>
+            <label className="mb-1 block text-sm font-medium">Description</label>
+            <InputTextarea
+              id="description"
+              defaultValue={form.description}
+              onChange={(e) => setForm((prev) => ({ ...prev, description: e.target.value }))}
+              rows={3}
             />
-            <label htmlFor="isActive" className="text-sm font-medium">
-              Active
-            </label>
           </div>
           <div className="flex justify-end">
             <Button type="submit">Save Subscription</Button>

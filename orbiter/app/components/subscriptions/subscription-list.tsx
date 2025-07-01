@@ -35,6 +35,11 @@ const columns: ColumnDef<Subscription>[] = [
     cell: ({ row }) => row.getValue<string>('frequency'),
   },
   {
+    accessorKey: 'interval',
+    header: 'Interval',
+    cell: ({ row }) => row.getValue<number>('interval'),
+  },
+  {
     accessorKey: 'startDate',
     header: 'Start Date',
     cell: ({ row }) =>

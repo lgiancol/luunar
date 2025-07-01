@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { ChevronLeft, LayoutDashboard, TrendingDown, TrendingUp, UsersIcon, Building2 } from 'lucide-react';
+import { Building2, ChevronLeft, CreditCard, LayoutDashboard, TrendingDown, TrendingUp, UsersIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '~/contexts/auth-context';
@@ -12,6 +12,7 @@ const navItems = [
   { name: 'Expenses', path: '/expenses', icon: TrendingDown },
   { name: 'Clients', path: '/clients', icon: UsersIcon },
   { name: 'Vendors', path: '/vendors', icon: Building2 },
+  { name: 'Subscriptions', path: '/subscriptions', icon: CreditCard },
   //   { name: 'Assets', path: '/assets', icon: Briefcase },
   //   { name: 'Liabilities', path: '/liabilities', icon: Banknote },
 ];

@@ -19,7 +19,6 @@ export async function apiPost<RESPONSE, MODEL>(
   payload: any,
   mapper: ResponseMapper<RESPONSE, MODEL>
 ): Promise<Result<MODEL>> {
-  console.log('API_BASE_URL', API_BASE_URL);
   const res = await fetch(`${API_BASE_URL}${endpoint}`, {
     headers: { 'Content-Type': 'application/json' },
     method: 'POST',

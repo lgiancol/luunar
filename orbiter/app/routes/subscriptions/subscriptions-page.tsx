@@ -1,6 +1,7 @@
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import PageDetailsDrawer from '~/components/shared/page-details-drawer';
+import { AddSubscriptionForm } from '~/components/subscriptions/add-subscription-form';
 import { SubscriptionList } from '~/components/subscriptions/subscription-list';
 import { Button } from '~/components/ui/button';
 import { usePaginatedSubscriptions } from '~/hooks/subscriptions/userPaginatedSubscriptions';
@@ -52,12 +53,13 @@ export default function SubscriptionsPage() {
         level={0}
       >
         <PageDetailsDrawer.Content>
-          {/* AddSubscriptionForm will go here */}
-          <div className="p-4 text-center text-gray-500">Add Subscription Form Coming Soon</div>
+          <AddSubscriptionForm onSuccess={handleAddSuccess} />
         </PageDetailsDrawer.Content>
         <PageDetailsDrawer.Footer>
           <div className="flex justify-end">
-            <Button disabled>Save Subscription</Button>
+            <Button form="add-subscription-form" type="submit">
+              Save Subscription
+            </Button>
           </div>
         </PageDetailsDrawer.Footer>
       </PageDetailsDrawer>

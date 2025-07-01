@@ -5,6 +5,7 @@ import dashboardRoutes from './dashboard.routes';
 import healthRoutes from './health.routes';
 import paymentAccountsRoutes from './payment-accounts/payment-accounts.routes';
 import paymentsRoutes from './payments/payments.routes';
+import subscriptionsRoutes from './subscriptions/subscriptions.routes';
 import usersRoutes from './users.routes';
 import vendorsRoutes from './vendors/vendors.routes';
 
@@ -18,5 +19,6 @@ router.use('/vendors', vendorsRoutes);
 router.use('/payments', paymentsRoutes);
 router.use('/payment_accounts', paymentAccountsRoutes);
 router.use('/dashboard', dashboardRoutes);
+router.use('/subscriptions', subscriptionsRoutes);
 
 export default router;

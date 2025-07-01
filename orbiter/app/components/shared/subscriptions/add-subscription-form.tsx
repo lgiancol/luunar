@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { VendorSelector } from '~/components/shared/vendor-selector';
 import { Button } from '~/components/ui/button';
 import { useRecentVendors } from '~/hooks/vendors/useRecentVendors';
@@ -7,12 +7,23 @@ import { isResultError } from '~/types/result';
 import InputNumber from '../../ui/input-number';
 import InputText from '../../ui/input-text';
 import InputTextarea from '../../ui/input-textarea';
+import type { Vendor } from '~/services/vendors/vendors.model';
 
 interface AddSubscriptionFormProps {
   onSuccess: () => void;
+  onAddVendor?: () => void;
+  selectedVendor?: Vendor;
+  recentVendors?: Vendor[];
+  vendorsLoading?: boolean;
 }
 
-export function AddSubscriptionForm({ onSuccess }: AddSubscriptionFormProps) {
+export function AddSubscriptionForm({
+  onSuccess,
+  onAddVendor,
+  selectedVendor,
+  recentVendors,
+  vendorsLoading,
+}: AddSubscriptionFormProps) {
   const [form, setForm] = useState({
     name: '',
     amount: 0,
@@ -24,8 +35,11 @@ export function AddSubscriptionForm({ onSuccess }: AddSubscriptionFormProps) {
     endDate: '',
   });
 
-  const { vendors: recentVendors, loading: vendorsLoading } = useRecentVendors(10);
-  const selectedVendor = recentVendors?.data.find((v) => v.id === form.vendorId);
+  useEffect(() => {
+    if (selectedVendor) {
+      setForm((prev) => ({ ...prev, vendorId: selectedVendor.id }));
+    }
+  }, [selectedVendor]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,9 +94,10 @@ export function AddSubscriptionForm({ onSuccess }: AddSubscriptionFormProps) {
             <label className="mb-1 block text-sm font-medium">Vendor</label>
             <VendorSelector
               selectedVendor={selectedVendor}
-              recentVendors={recentVendors?.data}
+              recentVendors={recentVendors}
               loading={vendorsLoading}
               onSelect={(vendor) => setForm((prev) => ({ ...prev, vendorId: vendor?.id || '' }))}
+              onAddVendor={onAddVendor}
             />
           </div>
           <div className="flex gap-2">

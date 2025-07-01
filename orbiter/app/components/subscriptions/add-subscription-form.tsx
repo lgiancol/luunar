@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button } from '~/components/ui/button';
 import { addSubscription } from '~/services/subscriptions/subscriptions.service';
+import { isResultError } from '~/types/result';
 import InputNumber from '../ui/input-number';
 import InputText from '../ui/input-text';
 import InputTextarea from '../ui/input-textarea';
@@ -18,7 +19,6 @@ export function AddSubscriptionForm({ onSuccess }: AddSubscriptionFormProps) {
     description: '',
     startDate: new Date().toISOString().split('T')[0],
     endDate: '',
-    isActive: true,
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -46,13 +46,17 @@ export function AddSubscriptionForm({ onSuccess }: AddSubscriptionFormProps) {
       interval: form.interval,
       startDate: new Date(form.startDate),
       endDate: form.endDate ? new Date(form.endDate) : null,
-      isActive: form.isActive,
       description: form.description,
       category: '',
       vendorId: '',
       paymentAccountId: '',
       lastProcessed: null,
     });
+
+    if (isResultError(result)) {
+      console.log(result.error);
+      return;
+    }
 
     onSuccess();
   };

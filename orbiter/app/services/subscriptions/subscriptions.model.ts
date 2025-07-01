@@ -22,7 +22,16 @@ export interface Subscription {
   paymentAccount: PaymentAccount | null;
 }
 
-export type CreateSubscriptionModel = Omit<
-  Subscription,
-  'id' | 'createdAt' | 'updatedAt' | 'vendor' | 'paymentAccount'
->;
+export type CreateSubscriptionModel = {
+  name: string;
+  amount: number;
+  vendorId: string;
+  paymentAccountId: string;
+  frequency: string;
+  interval: number;
+  startDate: Date;
+  endDate: Date | null;
+  lastProcessed: Date | null;
+  description: string | null;
+  category: string | null;
+};

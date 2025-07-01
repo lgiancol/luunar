@@ -11,6 +11,7 @@ import { usePaginatedSubscriptions } from '~/hooks/subscriptions/userPaginatedSu
 import { useRedirectIfUnauthenticated } from '~/hooks/useRedirectIfUnauthenticated';
 import { useRecentVendors } from '~/hooks/vendors/useRecentVendors';
 import type { PaymentAccount } from '~/services/payments/payment-account.model';
+import type { Subscription } from '~/services/subscriptions/subscriptions.model';
 import type { Vendor } from '~/services/vendors/vendors.model';
 
 export default function SubscriptionsPage() {
@@ -25,6 +26,7 @@ export default function SubscriptionsPage() {
   const { vendors: recentVendorsPage, refetch: refreshVendors, loading: vendorsLoading } = useRecentVendors(50);
   const { paymentAccountsPage, refresh: refreshPaymentAccounts } = useRecentPaymentAccounts(50);
   const [selectedPaymentAccount, setSelectedPaymentAccount] = useState<PaymentAccount>();
+  const [selectedSubscriptions, setSelectedSubscriptions] = useState<Subscription[]>([]);
 
   const handleAddSuccess = () => {
     setIsAddDrawerOpen(false);
@@ -67,7 +69,10 @@ export default function SubscriptionsPage() {
           </div>
         </div>
         <div>
-          <SubscriptionList subscriptionsPage={subscriptionsPage} />
+          <SubscriptionList
+            subscriptionsPage={subscriptionsPage}
+            onSubscriptionSelectionChange={setSelectedSubscriptions}
+          />
         </div>
       </div>
 

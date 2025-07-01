@@ -1,32 +1,46 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import PaymentAccountSelector from '~/components/shared/payment-account-selector';
 import { VendorSelector } from '~/components/shared/vendor-selector';
 import { Button } from '~/components/ui/button';
-import { useRecentVendors } from '~/hooks/vendors/useRecentVendors';
+import type { PaymentAccount } from '~/services/payments/payment-account.model';
 import { addSubscription } from '~/services/subscriptions/subscriptions.service';
+import type { Vendor } from '~/services/vendors/vendors.model';
 import { isResultError } from '~/types/result';
 import InputNumber from '../../ui/input-number';
 import InputText from '../../ui/input-text';
 import InputTextarea from '../../ui/input-textarea';
-import type { Vendor } from '~/services/vendors/vendors.model';
 
 interface AddSubscriptionFormProps {
-  onSuccess: () => void;
-  onAddVendor?: () => void;
   selectedVendor?: Vendor;
   recentVendors?: Vendor[];
   vendorsLoading?: boolean;
+
+  selectedPaymentAccount?: PaymentAccount;
+  recentPaymentAccounts?: PaymentAccount[];
+
+  onPaymentAccountSelect?: (paymentAccount: PaymentAccount) => void;
+  onVendorSelect?: (vendor: Vendor) => void;
+  onAddPaymentAccount?: () => void;
+  onSuccess: () => void;
+  onAddVendor?: () => void;
 }
 
 export function AddSubscriptionForm({
   onSuccess,
   onAddVendor,
-  selectedVendor,
   recentVendors,
   vendorsLoading,
+  onAddPaymentAccount,
+  recentPaymentAccounts,
+  selectedVendor,
+  selectedPaymentAccount,
+  onPaymentAccountSelect,
+  onVendorSelect,
 }: AddSubscriptionFormProps) {
   const [form, setForm] = useState({
     name: '',
     amount: 0,
+    paymentAccountId: '',
     vendorId: '',
     frequency: '',
     interval: 1,
@@ -35,11 +49,24 @@ export function AddSubscriptionForm({
     endDate: '',
   });
 
+  const vendor = useMemo(() => {
+    return selectedVendor;
+  }, [selectedVendor]);
+  const paymentAccount = useMemo(() => {
+    return selectedPaymentAccount;
+  }, [selectedPaymentAccount]);
+
   useEffect(() => {
     if (selectedVendor) {
       setForm((prev) => ({ ...prev, vendorId: selectedVendor.id }));
     }
   }, [selectedVendor]);
+
+  useEffect(() => {
+    if (selectedPaymentAccount) {
+      setForm((prev) => ({ ...prev, paymentAccountId: selectedPaymentAccount.id }));
+    }
+  }, [selectedPaymentAccount]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,7 +81,7 @@ export function AddSubscriptionForm({
       description: form.description,
       category: '',
       vendorId: form.vendorId,
-      paymentAccountId: '',
+      paymentAccountId: form.paymentAccountId,
       lastProcessed: null,
     });
 
@@ -91,12 +118,21 @@ export function AddSubscriptionForm({
             </div>
           </div>
           <div>
+            <label className="mb-1 block text-sm font-medium">Payment Method</label>
+            <PaymentAccountSelector
+              selectedPaymentAccount={paymentAccount}
+              paymentAccounts={recentPaymentAccounts}
+              onSelect={onPaymentAccountSelect}
+              onAddPaymentAccount={onAddPaymentAccount}
+            />
+          </div>
+          <div>
             <label className="mb-1 block text-sm font-medium">Vendor</label>
             <VendorSelector
-              selectedVendor={selectedVendor}
+              selectedVendor={vendor}
               recentVendors={recentVendors}
               loading={vendorsLoading}
-              onSelect={(vendor) => setForm((prev) => ({ ...prev, vendorId: vendor?.id || '' }))}
+              onSelect={onVendorSelect}
               onAddVendor={onAddVendor}
             />
           </div>

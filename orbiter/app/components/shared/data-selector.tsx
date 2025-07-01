@@ -16,7 +16,7 @@ interface DataSelectorProps<T> {
   recentList?: T[];
   filteredList?: T[];
   loadNextPage?: () => void;
-  onSelect?: (item?: T) => void;
+  onSelect?: (item: T) => void;
   onAddItem?: () => void;
 
   children: React.ReactNode;
@@ -56,13 +56,13 @@ export default function DataSelector<T = any>({
 
   const handleItemClick = useCallback(
     (item?: T) => {
-      if (onSelect) {
+      if (onSelect && item) {
         onSelect(item);
       }
 
       setShowList(false);
     },
-    [selectedEntry, onSelect]
+    [onSelect]
   );
 
   useEffect(() => {

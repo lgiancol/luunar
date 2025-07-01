@@ -4,7 +4,7 @@ import DataSelector from './data-selector';
 interface PaymentAccountSelectorProps {
   selectedPaymentAccount?: PaymentAccount;
   paymentAccounts?: PaymentAccount[];
-  onSelect?: (pA?: PaymentAccount) => void;
+  onSelect?: (pA: PaymentAccount) => void;
   onAddPaymentAccount?: () => void;
 }
 export default function PaymentAccountSelector({

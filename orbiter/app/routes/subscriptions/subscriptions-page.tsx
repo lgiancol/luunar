@@ -1,8 +1,8 @@
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import PageDetailsDrawer from '~/components/shared/page-details-drawer';
-import { AddSubscriptionForm } from '~/components/subscriptions/add-subscription-form';
-import { SubscriptionList } from '~/components/subscriptions/subscription-list';
+import { AddSubscriptionForm } from '~/components/shared/subscriptions/add-subscription-form';
+import { SubscriptionList } from '~/components/shared/subscriptions/subscription-list';
 import { Button } from '~/components/ui/button';
 import { usePaginatedSubscriptions } from '~/hooks/subscriptions/userPaginatedSubscriptions';
 import { useRedirectIfUnauthenticated } from '~/hooks/useRedirectIfUnauthenticated';

@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { VendorSelector } from '~/components/shared/vendor-selector';
 import { Button } from '~/components/ui/button';
+import { useRecentVendors } from '~/hooks/vendors/useRecentVendors';
 import { addSubscription } from '~/services/subscriptions/subscriptions.service';
 import { isResultError } from '~/types/result';
-import InputNumber from '../ui/input-number';
-import InputText from '../ui/input-text';
-import InputTextarea from '../ui/input-textarea';
+import InputNumber from '../../ui/input-number';
+import InputText from '../../ui/input-text';
+import InputTextarea from '../../ui/input-textarea';
 
 interface AddSubscriptionFormProps {
   onSuccess: () => void;
@@ -14,6 +16,7 @@ export function AddSubscriptionForm({ onSuccess }: AddSubscriptionFormProps) {
   const [form, setForm] = useState({
     name: '',
     amount: 0,
+    vendorId: '',
     frequency: '',
     interval: 1,
     description: '',
@@ -21,20 +24,8 @@ export function AddSubscriptionForm({ onSuccess }: AddSubscriptionFormProps) {
     endDate: '',
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value, type } = e.target;
-    if (type === 'checkbox') {
-      setForm((prev) => ({
-        ...prev,
-        [name]: (e.target as HTMLInputElement).checked,
-      }));
-    } else {
-      setForm((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
-  };
+  const { vendors: recentVendors, loading: vendorsLoading } = useRecentVendors(10);
+  const selectedVendor = recentVendors?.data.find((v) => v.id === form.vendorId);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,7 +39,7 @@ export function AddSubscriptionForm({ onSuccess }: AddSubscriptionFormProps) {
       endDate: form.endDate ? new Date(form.endDate) : null,
       description: form.description,
       category: '',
-      vendorId: '',
+      vendorId: form.vendorId,
       paymentAccountId: '',
       lastProcessed: null,
     });
@@ -85,6 +76,15 @@ export function AddSubscriptionForm({ onSuccess }: AddSubscriptionFormProps) {
               />
             </div>
           </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium">Vendor</label>
+            <VendorSelector
+              selectedVendor={selectedVendor}
+              recentVendors={recentVendors?.data}
+              loading={vendorsLoading}
+              onSelect={(vendor) => setForm((prev) => ({ ...prev, vendorId: vendor?.id || '' }))}
+            />
+          </div>
           <div className="flex gap-2">
             <div className="flex-1">
               <label className="mb-1 block text-sm font-medium">Frequency</label>
@@ -105,6 +105,15 @@ export function AddSubscriptionForm({ onSuccess }: AddSubscriptionFormProps) {
               />
             </div>
           </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium">Description</label>
+            <InputTextarea
+              id="description"
+              defaultValue={form.description}
+              onChange={(e) => setForm((prev) => ({ ...prev, description: e.target.value }))}
+              rows={3}
+            />
+          </div>
           <div className="flex gap-2">
             <div className="flex-1">
               <label className="mb-1 block text-sm font-medium">Start Date</label>
@@ -124,15 +133,6 @@ export function AddSubscriptionForm({ onSuccess }: AddSubscriptionFormProps) {
                 onChange={(e) => setForm((prev) => ({ ...prev, endDate: e.target.value }))}
               />
             </div>
-          </div>
-          <div>
-            <label className="mb-1 block text-sm font-medium">Description</label>
-            <InputTextarea
-              id="description"
-              defaultValue={form.description}
-              onChange={(e) => setForm((prev) => ({ ...prev, description: e.target.value }))}
-              rows={3}
-            />
           </div>
           <div className="flex justify-end">
             <Button type="submit">Save Subscription</Button>

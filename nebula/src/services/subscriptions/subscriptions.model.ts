@@ -1,7 +1,7 @@
-import type { VendorModel } from '../vendors/vendors.model';
 import type { PaymentAccount } from '../payments/payment-account.model';
+import type { VendorModel } from '../vendors/vendors.model';
 
-export interface SubscriptionModel {
+export interface Subscription {
   id: string;
   createdAt: Date;
   updatedAt: Date;
@@ -44,6 +44,7 @@ export interface UpdateSubscriptionModel {
   startDate?: Date;
   endDate?: Date | null;
   isActive?: boolean;
+  lastProcessed?: Date | null;
   description?: string | null;
   category?: string | null;
-} 
+}

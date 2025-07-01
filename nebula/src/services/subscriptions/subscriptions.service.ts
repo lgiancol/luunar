@@ -10,18 +10,7 @@ export class SubscriptionsService {
   }
 
   async createSubscription(data: CreateSubscriptionModel) {
-    return this.subscriptionsRepository.createSubscription({
-      name: data.name,
-      amount: data.amount,
-      vendor_id: data.vendorId,
-      payment_account_id: data.paymentAccountId,
-      frequency: data.frequency,
-      interval: data.interval,
-      start_date: data.startDate,
-      end_date: data.endDate,
-      description: data.description,
-      category: data.category,
-    });
+    return this.subscriptionsRepository.createSubscription(data);
   }
 
   async getSubscriptions(data: PaginatedPayload) {
@@ -33,30 +22,18 @@ export class SubscriptionsService {
   }
 
   async updateSubscription(id: string, data: UpdateSubscriptionModel) {
-    return this.subscriptionsRepository.updateSubscription(id, {
-      name: data.name,
-      amount: data.amount,
-      vendor_id: data.vendorId,
-      payment_account_id: data.paymentAccountId,
-      frequency: data.frequency,
-      interval: data.interval,
-      start_date: data.startDate,
-      end_date: data.endDate,
-      is_active: data.isActive,
-      description: data.description,
-      category: data.category,
-    });
+    return this.subscriptionsRepository.updateSubscription(id, data);
   }
 
   async deleteSubscription(id: string) {
     return this.subscriptionsRepository.deleteSubscription(id);
   }
 
-  async getActiveSubscriptions() {
-    return this.subscriptionsRepository.getActiveSubscriptions();
+  async getActiveSubscriptions(data: PaginatedPayload) {
+    return this.subscriptionsRepository.getActiveSubscriptions(data);
   }
 
   async updateLastProcessed(id: string, lastProcessed: Date) {
     return this.subscriptionsRepository.updateLastProcessed(id, lastProcessed);
   }
-} 
+}

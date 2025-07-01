@@ -10,5 +10,6 @@ export default [
     route('clients', './routes/clients/clients-page.tsx'),
     route('clients/add', './routes/clients/add/add-client-page.tsx'),
     route('vendors', './routes/vendors/vendors-page.tsx'),
+    route('subscriptions', './routes/subscriptions/subscriptions-page.tsx'),
   ]),
 ] satisfies RouteConfig;

@@ -1,11 +1,10 @@
-import { SubscriptionsController } from 'controllers/subscriptions.controller';
 import { Router } from 'express';
-import { mapBodyPayload } from 'middleware/map-body-payload.middleware';
-import { verifyPaginatedQueryParams } from 'middleware/verify-paginated-query-params.middleware';
+import { subscriptionsController } from '../../controllers/subscriptions.controller';
+import { mapBodyPayload } from '../../middleware/map-body-payload.middleware';
+import { verifyPaginatedQueryParams } from '../../middleware/verify-paginated-query-params.middleware';
 import { mapAddSubscriptionPayload, mapUpdateSubscriptionPayload } from './subscriptions-routes.mapper';
 
 const router = Router();
-const subscriptionsController = new SubscriptionsController();
 
 router.post('/', mapBodyPayload(mapAddSubscriptionPayload), (req, res) =>
   subscriptionsController.addSubscription(req, res),

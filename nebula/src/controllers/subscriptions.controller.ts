@@ -1,21 +1,13 @@
 import { Request, Response } from 'express';
-import { SubscriptionsRepository } from 'repositories/subscriptions/subscriptions.repository';
-import { CreateSubscriptionModel, UpdateSubscriptionModel } from 'services/subscriptions/subscriptions.model';
-import { SubscriptionsService } from 'services/subscriptions/subscriptions.service';
-import { ModelToResponseBodyMapper } from 'utils/controller.utils';
+import { CreateSubscriptionModel, UpdateSubscriptionModel } from '../services/subscriptions/subscriptions.model';
+import { subscriptionsService } from '../services/subscriptions/subscriptions.service';
 import { isResultError } from '../types/result';
+import { ModelToResponseBodyMapper } from '../utils/controller.utils';
 
-export class SubscriptionsController {
-  private subscriptionsService: SubscriptionsService;
-
-  constructor() {
-    const subscriptionsRepository = new SubscriptionsRepository();
-    this.subscriptionsService = new SubscriptionsService(subscriptionsRepository);
-  }
-
+class SubscriptionsController {
   async addSubscription(req: Request, res: Response) {
     const createSubscriptionModel = req.body as CreateSubscriptionModel;
-    const result = await this.subscriptionsService.createSubscription(createSubscriptionModel);
+    const result = await subscriptionsService.createSubscription(createSubscriptionModel);
 
     if (isResultError(result)) {
       res.status(400).json({ error: result.error });
@@ -27,7 +19,7 @@ export class SubscriptionsController {
 
   async getSubscriptions(req: Request, res: Response) {
     const { page, pageSize } = req.query as { page: string; pageSize: string };
-    const result = await this.subscriptionsService.getSubscriptions({
+    const result = await subscriptionsService.getSubscriptions({
       page: parseInt(page),
       pageSize: parseInt(pageSize),
     });
@@ -42,7 +34,7 @@ export class SubscriptionsController {
 
   async getSubscriptionById(req: Request, res: Response) {
     const { id } = req.params;
-    const result = await this.subscriptionsService.getSubscriptionById(id);
+    const result = await subscriptionsService.getSubscriptionById(id);
 
     if (isResultError(result)) {
       res.status(404).json({ error: result.error });
@@ -55,7 +47,7 @@ export class SubscriptionsController {
   async updateSubscription(req: Request, res: Response) {
     const { id } = req.params;
     const updateSubscriptionModel = req.body as UpdateSubscriptionModel;
-    const result = await this.subscriptionsService.updateSubscription(id, updateSubscriptionModel);
+    const result = await subscriptionsService.updateSubscription(id, updateSubscriptionModel);
 
     if (isResultError(result)) {
       res.status(400).json({ error: result.error });
@@ -67,7 +59,7 @@ export class SubscriptionsController {
 
   async deleteSubscription(req: Request, res: Response) {
     const { id } = req.params;
-    const result = await this.subscriptionsService.deleteSubscription(id);
+    const result = await subscriptionsService.deleteSubscription(id);
 
     if (isResultError(result)) {
       res.status(400).json({ error: result.error });
@@ -77,3 +69,5 @@ export class SubscriptionsController {
     res.status(204).send();
   }
 }
+
+export const subscriptionsController = new SubscriptionsController();

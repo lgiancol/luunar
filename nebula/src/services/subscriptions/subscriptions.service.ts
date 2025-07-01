@@ -2,7 +2,7 @@ import { SubscriptionsRepository } from '../../repositories/subscriptions/subscr
 import { PaginatedPayload } from '../../utils/pagination.utils';
 import type { CreateSubscriptionModel, UpdateSubscriptionModel } from './subscriptions.model';
 
-export class SubscriptionsService {
+class SubscriptionsService {
   private subscriptionsRepository: SubscriptionsRepository;
 
   constructor(subscriptionsRepository: SubscriptionsRepository) {
@@ -37,3 +37,5 @@ export class SubscriptionsService {
     return this.subscriptionsRepository.updateLastProcessed(id, lastProcessed);
   }
 }
+
+export const subscriptionsService = new SubscriptionsService(new SubscriptionsRepository());

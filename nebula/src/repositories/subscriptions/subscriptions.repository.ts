@@ -1,11 +1,10 @@
-import prisma from 'db/prisma';
+import prisma from '../../db/prisma';
 import {
   CreateSubscriptionModel,
   Subscription,
   UpdateSubscriptionModel,
-} from 'services/subscriptions/subscriptions.model';
-import type { Result } from '../../types/result';
-import { resultError, resultSuccess } from '../../types/result';
+} from '../../services/subscriptions/subscriptions.model';
+import { Result, resultError, resultSuccess } from '../../types/result';
 import { mapPaginatedEntities, type PaginatedPayload, type PaginatedResultData } from '../../utils/pagination.utils';
 import {
   mapCreateSubscriptionModelToEntity,

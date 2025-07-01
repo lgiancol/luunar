@@ -1,12 +1,15 @@
-import { SubscriptionUncheckedCreateInput, SubscriptionUncheckedUpdateInput } from 'generated/prisma/models';
-import { mapPaymentAccountEntityToModel, PaymentAccountEntity } from 'repositories/payments/payment-account.entity';
-import { mapVendorEntityToModel, VendorEntity } from 'repositories/vendors/vendor.entity';
+import { Subscription as PrismaSubscription } from '../../generated/prisma';
+import { SubscriptionUncheckedCreateInput, SubscriptionUncheckedUpdateInput } from '../../generated/prisma/models';
+import {
+  mapPaymentAccountEntityToModel,
+  PaymentAccountEntity,
+} from '../../repositories/payments/payment-account.entity';
+import { mapVendorEntityToModel, VendorEntity } from '../../repositories/vendors/vendor.entity';
 import {
   CreateSubscriptionModel,
   Subscription,
   UpdateSubscriptionModel,
-} from 'services/subscriptions/subscriptions.model';
-import { Subscription as PrismaSubscription } from '../../generated/prisma';
+} from '../../services/subscriptions/subscriptions.model';
 
 export interface SubscriptionEntity extends PrismaSubscription {
   vendor: VendorEntity;

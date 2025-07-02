@@ -34,4 +34,6 @@ export type CreateSubscriptionModel = {
   lastProcessed: Date | null;
   description: string | null;
   category: string | null;
+
+  backfill?: boolean;
 };

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import PaymentAccountSelector from '~/components/shared/payment-account-selector';
 import { VendorSelector } from '~/components/shared/vendor-selector';
 import { Button } from '~/components/ui/button';
+import { Checkbox } from '~/components/ui/checkbox';
 import type { PaymentAccount } from '~/services/payments/payment-account.model';
 import { addSubscription } from '~/services/subscriptions/subscriptions.service';
 import type { Vendor } from '~/services/vendors/vendors.model';
@@ -47,6 +48,7 @@ export function AddSubscriptionForm({
     description: '',
     startDate: new Date().toISOString().split('T')[0],
     endDate: '',
+    backfill: false,
   });
 
   const vendor = useMemo(() => {
@@ -83,6 +85,7 @@ export function AddSubscriptionForm({
       vendorId: form.vendorId,
       paymentAccountId: form.paymentAccountId,
       lastProcessed: null,
+      backfill: form.backfill,
     });
 
     if (isResultError(result)) {
@@ -184,6 +187,16 @@ export function AddSubscriptionForm({
                 onChange={(e) => setForm((prev) => ({ ...prev, endDate: e.target.value }))}
               />
             </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Checkbox
+              id="backfill"
+              checked={form.backfill}
+              onCheckedChange={(checked) => setForm((prev) => ({ ...prev, backfill: !!checked }))}
+            />
+            <label htmlFor="backfill" className="text-sm font-medium">
+              Backfill past expenses from start date
+            </label>
           </div>
           <div className="flex justify-end">
             <Button type="submit">Save Subscription</Button>

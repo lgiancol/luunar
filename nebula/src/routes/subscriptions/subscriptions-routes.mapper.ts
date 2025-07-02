@@ -15,6 +15,7 @@ export function mapAddSubscriptionPayload(payload: any): CreateSubscriptionModel
     endDate: payload.endDate ? new Date(payload.endDate) : null,
     description: payload.description,
     category: payload.category,
+    backfill: payload.backfill,
   };
 }
 

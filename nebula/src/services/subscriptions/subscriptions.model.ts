@@ -32,6 +32,7 @@ export interface CreateSubscriptionModel {
   endDate: Date | null;
   description: string | null;
   category: string | null;
+  backfill?: boolean;
 }
 
 export interface UpdateSubscriptionModel {

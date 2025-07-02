@@ -14,7 +14,14 @@ class SubscriptionsController {
       return;
     }
 
-    res.json(ModelToResponseBodyMapper(result.data));
+    const subscription = result.data;
+
+    if (createSubscriptionModel.backfill) {
+      console.log('Backfill');
+      //   await subscriptionsService.backfillSubscription(subscription.id);
+    }
+
+    res.json(ModelToResponseBodyMapper(subscription));
   }
 
   async getSubscriptions(req: Request, res: Response) {
